@@ -1,5 +1,51 @@
 <!DOCTYPE html>
 <html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<h1 id="hh"></h1>
+	</body>
+	<script type="text/javascript">
+		function station(x,y,z){
+			//当前时间
+			var now = Date.now(),
+				//结束时间
+				end = new Date(x,y-1,z),
+				ends = end.getTime();
+			var ss = ends - now;
+			var s = Math.floor(ss/1000);
+			//相差天数
+			var day = Math.floor(s / 60 / 60 / 24);
+			//相差小时数
+			var hours = Math.floor(s / 60 / 60 % 24);
+			//相差分钟数
+			var min = Math.floor(s / 60 % 60 );
+			//相差秒数
+			var sec = Math.floor(s % 60 );
+			var html = "距离中秋放假还有"+day+"天"+hours+"时"+min+"分"+sec+"秒";
+			hh.innerHTML = html;
+
+		}
+		station(2019,09,13);
+		//一秒一次调用
+		setInterval(function(){
+			station(2019,09,13);
+		},1000);
+	</script>
+	<style type="text/css">
+		#hh{
+			font-size: 50px;
+			text-align: center;
+		}
+	</style>
+</html>
+
+
+
+<!DOCTYPE html>
+<html>
 <head>别看啦！快去学习！ 🌚
   <meta charset="utf-8">
   <title标题>别看啦！快去学习！别看啦！快去学习！别看啦！快去学习！别看啦！快去学习！别看啦！快去学习！别看啦！快去学习！别看啦！快去学习！别看啦！快去学习！</title标题>
