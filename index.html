@@ -24,14 +24,14 @@
 			var min = Math.floor(s / 60 % 60 );
 			//相差秒数
 			var sec = Math.floor(s % 60 );
-			var html = "距离放暑假大概还有"+day+"天"+hours+"时"+min+"分"+sec+"秒";
+			var html = "放暑假大概还有"+day+"天"+hours+"时"+min+"分"+sec+"秒";
 			hh.innerHTML = html;
 
 		}
-		station(2023,07,1);
+		station(2023,06,30);
 		//一秒一次调用
 		setInterval(function(){
-			station(2023,07,1);
+			station(2023,06,30);
 		},1000);
 	</script>
 	<style type="text/css">
