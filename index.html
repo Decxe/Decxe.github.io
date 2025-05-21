@@ -1,4 +1,39 @@
-<video width="320" height="240" autoplay>
-    <source src="VID_20250521_121124.mp4" type="video/mp4">
-    您的浏览器不支持HTML5视频。
-</video>
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* 重置浏览器默认样式 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden; /* 隐藏滚动条 */
+        }
+
+        /* 视频全屏样式 */
+        video {
+            position: fixed; /* 固定定位，始终相对于视口 */
+            top: 0;
+            left: 0;
+            width: 100vw; /* 100% 视口宽度 */
+            height: 100vh; /* 100% 视口高度 */
+            object-fit: cover; /* 保持比例并覆盖整个容器，避免黑边 */
+            z-index: -1; /* 视频在底层，如需在视频上叠加内容可调整 */
+        }
+
+        /* 可选：移动端适配（部分浏览器需手动点击播放） */
+        @media (max-width: 768px) {
+            video {
+                object-fit: contain; /* 移动端保持内容完整 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 视频标签，添加 autoplay（自动播放）和 muted（静音，避免浏览器限制） -->
+    <video controls autoplay muted loop>
+        <source src="VID_20250521_121124.mp4" type="video/mp4">
+        您的浏览器不支持 HTML5 视频。
+    </video>
+</body>
+</html>
