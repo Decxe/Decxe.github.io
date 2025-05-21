@@ -9,36 +9,68 @@
             overflow: hidden;
         }
 
-        /* 视频样式：占满上半屏幕（50% 高度） */
         video {
-            width: 100vw; /* 100% 宽度 */
-            height: 50vh; /* 50% 视口高度 */
-            object-fit: cover; /* 保持比例覆盖容器 */
-            display: block; /* 去除底部间隙 */
+            width: 100vw;
+            height: 50vh; /* 占上半屏 */
+            object-fit: cover;
         }
 
-        /* 标题样式：位于视频上方中央 */
-        .title {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 36px;
-            font-weight: bold;
+        /* 动态标题样式 */
+        .dynamic-title {
+            position: fixed; /* 固定在底部 */
+            left: 0;
+            bottom: 20px; /* 距离底部 20px */
+            width: 100%;
             text-align: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* 阴影效果 */
-            z-index: 1; /* 确保标题在视频上方 */
+            font-size: 50px; /* 字体放大 */
+            font-weight: bold;
+            color: transparent; /* 透明底色，通过背景显示渐变 */
+            background-clip: text; /* 背景裁剪为文字 */
+            animation: color-flicker 2s infinite; /* 闪烁动画 */
+        }
+
+        /* 彩色渐变背景 */
+        .dynamic-title {
+            background-image: linear-gradient(
+                45deg, 
+                #ff0000, /* 红 */
+                #ff7f00, /* 橙 */
+                #ffff00, /* 黄 */
+                #00ff00, /* 绿 */
+                #00ffff, /* 青 */
+                #0000ff, /* 蓝 */
+                #4b0082 /* 紫 */
+            );
+            background-size: 200% auto; /* 背景滚动速度 */
+            animation: gradient-animation 3s infinite, /* 渐变滚动 */
+                       text-shadow-animation 1.5s infinite; /* 文字阴影抖动 */
+        }
+
+        /* 动画关键帧 */
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes color-flicker {
+            0%, 100% { text-shadow: 0 0 10px #fff; }
+            50% { text-shadow: 0 0 20px #ff0000, 0 0 30px #00ff00; }
+        }
+
+        @keyframes text-shadow-animation {
+            0% { text-shadow: 2px 2px #ff0000, -2px -2px #00ff00; }
+            50% { text-shadow: -2px 2px #00ff00, 2px -2px #ff0000; }
+            100% { text-shadow: 2px -2px #ff0000, -2px 2px #00ff00; }
         }
     </style>
 </head>
 <body>
-    <!-- 视频标签 -->
     <video autoplay muted loop>
         <source src="VID_20250521_121929.mp4" type="video/mp4">
     </video>
 
-    <!-- 标题 -->
-    <div class="title">csgo上瘾的症状</div>
+    <!-- 动态标题 -->
+    <div class="dynamic-title">csgo上瘾的症状</div>
 </body>
 </html>
