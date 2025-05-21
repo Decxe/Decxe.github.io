@@ -11,57 +11,45 @@
 
         video {
             width: 100vw;
-            height: 50vh; /* 占上半屏 */
+            height: 50vh; /* 上半屏视频 */
             object-fit: cover;
         }
 
-        /* 动态标题样式 */
-        .dynamic-title {
-            position: fixed; /* 固定在底部 */
-            left: 0;
-            bottom: 20px; /* 距离底部 20px */
+        /* 文字背景容器 */
+        .text-bg {
+            position: fixed;
+            bottom: 0; /* 紧贴底部 */
             width: 100%;
-            text-align: center;
-            font-size: 50px; /* 字体放大 */
-            font-weight: bold;
-            color: transparent; /* 透明底色，通过背景显示渐变 */
-            background-clip: text; /* 背景裁剪为文字 */
-            animation: color-flicker 2s infinite; /* 闪烁动画 */
+            height: 50vh; /* 下半屏高度 */
+            background: #000; /* 黑色背景（可选） */
+            display: flex;
+            flex-wrap: wrap; /* 文字自动换行 */
+            align-items: center; /* 垂直居中 */
+            justify-content: center; /* 水平居中 */
+            gap: 10px; /* 文字间距 */
+            font-size: 24px; /* 基础字体大小 */
+            color: #fff; /* 文字颜色 */
+            opacity: 0.9; /* 透明度 */
+            overflow: hidden; /* 隐藏超出部分 */
         }
 
-        /* 彩色渐变背景 */
-        .dynamic-title {
-            background-image: linear-gradient(
-                45deg, 
-                #ff0000, /* 红 */
-                #ff7f00, /* 橙 */
-                #ffff00, /* 黄 */
-                #00ff00, /* 绿 */
-                #00ffff, /* 青 */
-                #0000ff, /* 蓝 */
-                #4b0082 /* 紫 */
-            );
-            background-size: 200% auto; /* 背景滚动速度 */
-            animation: gradient-animation 3s infinite, /* 渐变滚动 */
-                       text-shadow-animation 1.5s infinite; /* 文字阴影抖动 */
+        /* 动态文字样式 */
+        .text-bg span {
+            animation: float 3s infinite; /* 文字浮动动画 */
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* 文字阴影 */
         }
 
-        /* 动画关键帧 */
-        @keyframes gradient-animation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* 浮动动画 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        @keyframes color-flicker {
-            0%, 100% { text-shadow: 0 0 10px #fff; }
-            50% { text-shadow: 0 0 20px #ff0000, 0 0 30px #00ff00; }
-        }
-
-        @keyframes text-shadow-animation {
-            0% { text-shadow: 2px 2px #ff0000, -2px -2px #00ff00; }
-            50% { text-shadow: -2px 2px #00ff00, 2px -2px #ff0000; }
-            100% { text-shadow: 2px -2px #ff0000, -2px 2px #00ff00; }
+        /* 鼠标悬停效果（可选） */
+        .text-bg span:hover {
+            color: #ff0000;
+            transform: scale(1.2);
+            cursor: default;
         }
     </style>
 </head>
@@ -70,7 +58,19 @@
         <source src="VID_20250521_121929.mp4" type="video/mp4">
     </video>
 
-    <!-- 动态标题 -->
-    <div class="dynamic-title">csgo上瘾的症状</div>
+    <!-- 文字背景区域（重复生成文字） -->
+    <div class="text-bg">
+        <span>csgo上瘾的症状</span>
+        <span>csgo上瘾的症状</span>
+        <span>csgo上瘾的症状</span>
+        <span>csgo上瘾的症状</span>
+        <span>csgo上瘾的症状</span>
+        <span>csgo上瘾的症状</span>
+        <span>csgo上瘾的症状</span>
+        <span>csgo上瘾的症状</span>
+        <span>csgo上瘾的症状</span>
+        <span>csgo上瘾的症状</span>
+        <!-- 按需复制更多 span 标签 -->
+    </div>
 </body>
 </html>
