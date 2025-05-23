@@ -3,149 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>上下半屏创意布局</title>
+    <title>双图并排全屏展示</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            height: 100vh;
-            overflow: hidden;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
         }
-        /* 上半屏幕图片布局 */
-        .上半屏幕 {
-            height: 50vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f0f0f0;
+        body {
+            overflow: hidden;
+            height: 100vh;
+            background: #0f0f1a;
         }
         .图片容器 {
-            width: 90%;
-            height: 90%;
+            width: 100%;
+            height: 100vh;
             display: flex;
-            gap: 20px;
+            flex-direction: row;
+            overflow: hidden;
+        }
+        @media (max-width: 768px) {
+            .图片容器 {
+                flex-direction: column; /* 手机端自动堆叠显示 */
+            }
         }
         .图片项 {
             flex: 1;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            cursor: pointer;
+            transition: flex 0.5s ease;
         }
         .图片项 img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 0.8s ease;
         }
-        .图片项 img:hover {
-            transform: scale(1.03);
+        .图片项:hover img {
+            transform: scale(1.05);
         }
-        
-        /* 下半屏幕互动区域 */
-        .下半屏幕 {
-            height: 50vh;
-            background: #1a1a2e;
-            position: relative;
+        .图片项.active {
+            flex: 1.5; /* 点击后放大宽度 */
         }
-        .彩蛋容器 {
+        .图片项.active img {
+            transform: scale(1.1);
+        }
+        .图片信息 {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            overflow: hidden;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
-        .彩蛋 {
+        .图片项:hover .图片信息 {
+            opacity: 1;
+        }
+        .切换提示 {
             position: absolute;
-            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.2rem;
+            z-index: 1;
+            opacity: 0.7;
             pointer-events: none;
-        }
-        .彩蛋:nth-child(odd) {
-            background: linear-gradient(45deg, #ff512f, #f09819);
-        }
-        .彩蛋:nth-child(even) {
-            background: linear-gradient(45deg, #7b439, #dc2430);
         }
     </style>
 </head>
 <body>
-    <!-- 上半屏幕：两张图片并排 -->
-    <div class="上半屏幕">
-        <div class="图片容器">
-            <div class="图片项">
-                <img src="mmexport1747576604743.png" alt="风景图1">
+    <div class="图片容器" id="imageContainer">
+        <div class="图片项" data-index="1">
+            <img src="mmexport1747576604743.png" alt="图片1">
+            <div class="图片信息">
+                <h3>自然风景</h3>
+                <p>点击可放大查看</p>
             </div>
-            <div class="图片项">
-                <img src="mmexport1747576602409.png" alt="风景图2">
-            </div>
+            <div class="切换提示">← 点击切换</div>
         </div>
-    </div>
-    
-    <!-- 下半屏幕：互动彩蛋区域 -->
-    <div class="下半屏幕">
-        <div class="彩蛋容器" id="eggContainer"></div>
+        <div class="图片项" data-index="2">
+            <img src="mmexport1747576602409.png" alt="图片2">
+            <div class="图片信息">
+                <h3>城市建筑</h3>
+                <p>点击可放大查看</p>
+            </div>
+            <div class="切换提示">点击切换 →</div>
+        </div>
     </div>
 
     <script>
-        // 上半屏图片懒加载（示例）
-        document.addEventListener('DOMContentLoaded', () => {
-            const imgElements = document.querySelectorAll('.图片项 img');
-            imgElements.forEach(img => {
-                img.style.opacity = '0';
-                img.style.transition = 'opacity 0.8s ease';
-                setTimeout(() => {
-                    img.style.opacity = '1';
-                }, 300);
+        const imageContainer = document.getElementById('imageContainer');
+        const imageItems = document.querySelectorAll('.图片项');
+        let activeIndex = 0; // 记录当前激活的图片索引
+        
+        // 初始化第一张图片为激活状态
+        imageItems[0].classList.add('active');
+        
+        // 点击图片切换效果
+        imageItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // 移除所有激活状态
+                imageItems.forEach(i => i.classList.remove('active'));
+                // 添加当前图片激活状态
+                item.classList.add('active');
+                // 记录当前索引
+                activeIndex = parseInt(item.dataset.index) - 1;
             });
         });
         
-        // 下半屏互动彩蛋逻辑
-        const eggContainer = document.getElementById('eggContainer');
+        // 自动切换图片（可选功能）
+        let autoSwitch = setInterval(() => {
+            activeIndex = (activeIndex + 1) % imageItems.length;
+            imageItems.forEach(i => i.classList.remove('active'));
+            imageItems[activeIndex].classList.add('active');
+        }, 5000); // 5秒自动切换一次
         
-        // 点击生成彩蛋
-        eggContainer.addEventListener('click', (e) => {
-            createEgg(e.clientX, e.clientY);
+        // 鼠标悬停暂停自动切换，离开继续
+        imageContainer.addEventListener('mouseenter', () => {
+            clearInterval(autoSwitch);
         });
         
-        // 彩蛋动画效果
-        function createEgg(x, y) {
-            const egg = document.createElement('div');
-            egg.classList.add('彩蛋');
-            
-            // 随机彩蛋大小和动画时间
-            const size = Math.random() * 40 + 20;
-            const duration = Math.random() * 3 + 2;
-            
-            egg.style.width = `${size}px`;
-            egg.style.height = `${size}px`;
-            egg.style.left = `${x - size/2}px`;
-            egg.style.top = `${y - size/2}px`;
-            egg.style.boxShadow = `0 0 20px rgba(255, 255, 255, 0.5)`;
-            egg.style.animation = `rise ${duration}s ease-out forwards`;
-            
-            eggContainer.appendChild(egg);
-            
-            // 定义上升动画
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes rise {
-                    0% {
-                        transform: translateY(0) scale(1);
-                        opacity: 1;
-                    }
-                    100% {
-                        transform: translateY(-150px) scale(0.5);
-                        opacity: 0;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-            
-            // 动画结束后移除元素
-            setTimeout(() => {
-                egg.remove();
-            }, duration * 1000);
-        }
+        imageContainer.addEventListener('mouseleave', () => {
+            autoSwitch = setInterval(() => {
+                activeIndex = (activeIndex + 1) % imageItems.length;
+                imageItems.forEach(i => i.classList.remove('active'));
+                imageItems[activeIndex].classList.add('active');
+            }, 5000);
+        });
     </script>
 </body>
 </html>
