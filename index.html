@@ -1,80 +1,151 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上下半屏创意布局</title>
     <style>
-        body, html {
+        body {
             margin: 0;
             padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        /* 上半屏幕图片布局 */
+        .上半屏幕 {
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f0f0;
+        }
+        .图片容器 {
+            width: 90%;
+            height: 90%;
+            display: flex;
+            gap: 20px;
+        }
+        .图片项 {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .图片项 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .图片项 img:hover {
+            transform: scale(1.03);
+        }
+        
+        /* 下半屏幕互动区域 */
+        .下半屏幕 {
+            height: 50vh;
+            background: #1a1a2e;
+            position: relative;
+        }
+        .彩蛋容器 {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
             height: 100%;
             overflow: hidden;
         }
-
-        video {
-            width: 100vw;
-            height: 50vh; /* 上半屏视频 */
-            object-fit: cover;
+        .彩蛋 {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
         }
-
-        /* 文字背景容器 */
-        .text-bg {
-            position: fixed;
-            bottom: 0; /* 紧贴底部 */
-            width: 100%;
-            height: 50vh; /* 下半屏高度 */
-            background: #000; /* 黑色背景（可选） */
-            display: flex;
-            flex-wrap: wrap; /* 文字自动换行 */
-            align-items: center; /* 垂直居中 */
-            justify-content: center; /* 水平居中 */
-            gap: 10px; /* 文字间距 */
-            font-size: 96px; /* 基础字体大小 */
-            color: #fff; /* 文字颜色 */
-            opacity: 0.9; /* 透明度 */
-            overflow: hidden; /* 隐藏超出部分 */
+        .彩蛋:nth-child(odd) {
+            background: linear-gradient(45deg, #ff512f, #f09819);
         }
-
-        /* 动态文字样式 */
-        .text-bg span {
-            animation: float 3s infinite; /* 文字浮动动画 */
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* 文字阴影 */
-        }
-
-        /* 浮动动画 */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        /* 鼠标悬停效果（可选） */
-        .text-bg span:hover {
-            color: #ff0000;
-            transform: scale(1.2);
-            cursor: default;
+        .彩蛋:nth-child(even) {
+            background: linear-gradient(45deg, #7b439, #dc2430);
         }
     </style>
 </head>
 <body>
-    <video autoplay muted loop>
-        <source src="VID_20250521_121929.mp4" type="video/mp4">
-    </video>
-
-    <!-- 文字背景区域（重复生成文字） -->
-    <div class="text-bg">
-        <span>csgo上瘾的症状</span>
-        <span>csgo上瘾的症状</span>
-        <span>csgo上瘾的症状</span>
-        <span>csgo上瘾的症状</span>
-        <span>csgo上瘾的症状</span>
-        <span>csgo上瘾的症状</span>
-        <span>csgo上瘾的症状</span>
-        <span>csgo上瘾的症状</span>
-        <span>csgo上瘾的症状</span>
-        <span>csgo上瘾的症状</span>
-        <span>csgo上瘾的症状</span>
-        <span>csgo上瘾的症状</span>
-        <span>csgo上瘾的症状</span>
-        <span>csgo上瘾的症状</span>
-        <!-- 按需复制更多 span 标签 -->
+    <!-- 上半屏幕：两张图片并排 -->
+    <div class="上半屏幕">
+        <div class="图片容器">
+            <div class="图片项">
+                <img src="https://picsum.photos/800/600?random=1" alt="风景图1">
+            </div>
+            <div class="图片项">
+                <img src="https://picsum.photos/800/600?random=2" alt="风景图2">
+            </div>
+        </div>
     </div>
+    
+    <!-- 下半屏幕：互动彩蛋区域 -->
+    <div class="下半屏幕">
+        <div class="彩蛋容器" id="eggContainer"></div>
+    </div>
+
+    <script>
+        // 上半屏图片懒加载（示例）
+        document.addEventListener('DOMContentLoaded', () => {
+            const imgElements = document.querySelectorAll('.图片项 img');
+            imgElements.forEach(img => {
+                img.style.opacity = '0';
+                img.style.transition = 'opacity 0.8s ease';
+                setTimeout(() => {
+                    img.style.opacity = '1';
+                }, 300);
+            });
+        });
+        
+        // 下半屏互动彩蛋逻辑
+        const eggContainer = document.getElementById('eggContainer');
+        
+        // 点击生成彩蛋
+        eggContainer.addEventListener('click', (e) => {
+            createEgg(e.clientX, e.clientY);
+        });
+        
+        // 彩蛋动画效果
+        function createEgg(x, y) {
+            const egg = document.createElement('div');
+            egg.classList.add('彩蛋');
+            
+            // 随机彩蛋大小和动画时间
+            const size = Math.random() * 40 + 20;
+            const duration = Math.random() * 3 + 2;
+            
+            egg.style.width = `${size}px`;
+            egg.style.height = `${size}px`;
+            egg.style.left = `${x - size/2}px`;
+            egg.style.top = `${y - size/2}px`;
+            egg.style.boxShadow = `0 0 20px rgba(255, 255, 255, 0.5)`;
+            egg.style.animation = `rise ${duration}s ease-out forwards`;
+            
+            eggContainer.appendChild(egg);
+            
+            // 定义上升动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes rise {
+                    0% {
+                        transform: translateY(0) scale(1);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translateY(-150px) scale(0.5);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // 动画结束后移除元素
+            setTimeout(() => {
+                egg.remove();
+            }, duration * 1000);
+        }
+    </script>
 </body>
 </html>
