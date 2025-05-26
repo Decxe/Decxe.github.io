@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>实时视频字幕生成器</title>
+  <title>百度网盘视频字幕生成器</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
@@ -14,7 +14,7 @@
       theme: {
         extend: {
           colors: {
-            primary: '#165DFF',
+            primary: '#22C55E', // 百度绿
             secondary: '#36D399',
             accent: '#8B5CF6',
             neutral: '#1E293B',
@@ -39,7 +39,6 @@
       }
       .text-shadow {
         text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
       }
       .text-shadow-lg {
         text-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.08);
@@ -54,6 +53,9 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
+      .pan-gradient {
+        background: linear-gradient(135deg, #22C55E 0%, #10B981 100%);
+      }
     }
   </style>
 </head>
@@ -62,8 +64,8 @@
   <header class="bg-neutral/80 backdrop-blur fixed w-full z-50 transition-all duration-300" id="navbar">
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center space-x-2">
-        <i class="fa fa-closed-captioning-o text-primary text-2xl"></i>
-        <h1 class="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">SubGenius</h1>
+        <i class="fa fa-cloud text-primary text-2xl"></i>
+        <h1 class="text-xl font-bold pan-gradient bg-clip-text text-transparent">网盘字幕助手</h1>
       </div>
       
       <nav class="hidden md:flex items-center space-x-6">
@@ -77,8 +79,8 @@
         <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-700 transition-colors">
           <i class="fa fa-moon-o"></i>
         </button>
-        <button class="hidden md:block bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all transform hover:scale-105">
-          开始使用
+        <button id="login-button" class="hidden md:block bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all transform hover:scale-105 flex items-center">
+          <i class="fa fa-sign-in mr-2"></i> 登录网盘
         </button>
         <button id="mobile-menu-button" class="md:hidden p-2 rounded-full hover:bg-gray-700 transition-colors">
           <i class="fa fa-bars"></i>
@@ -93,8 +95,8 @@
         <a href="#demo" class="text-gray-300 hover:text-primary py-2 transition-colors">演示</a>
         <a href="#settings" class="text-gray-300 hover:text-primary py-2 transition-colors">设置</a>
         <a href="#about" class="text-gray-300 hover:text-primary py-2 transition-colors">关于</a>
-        <button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all transform hover:scale-105">
-          开始使用
+        <button id="mobile-login-button" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
+          <i class="fa fa-sign-in mr-2"></i> 登录网盘
         </button>
       </div>
     </div>
@@ -106,22 +108,22 @@
     <section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
       <div class="absolute inset-0 z-0">
         <video autoplay muted loop class="w-full h-full object-cover opacity-30">
-          <source src="https://assets.mixkit.co/videos/preview/mixkit-people-walking-in-an-airport-hall-2315-large.mp4" type="video/mp4">
+          <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-cloud-storage-1271-large.mp4" type="video/mp4">
         </video>
         <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 to-gray-900"></div>
       </div>
       
       <div class="container mx-auto px-4 z-10 text-center">
         <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold mb-6 leading-tight">
-          <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">实时视频字幕</span>
-          <br>让内容无障碍
+          <span class="pan-gradient bg-clip-text text-transparent">百度网盘视频</span>
+          <br>字幕自动生成
         </h1>
         <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-300 max-w-2xl mx-auto mb-8">
-          自动生成精准字幕，支持多种语言，提升视频可访问性和用户体验。适用于会议、教育、直播和内容创作。
+          一键为百度网盘内的视频生成精准字幕，支持多语言识别和自定义样式。提升视频可访问性和用户体验。
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-4">
-          <button class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
-            <i class="fa fa-play-circle mr-2"></i> 立即试用
+          <button id="hero-login-button" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
+            <i class="fa fa-cloud mr-2"></i> 登录网盘开始使用
           </button>
           <button class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-all flex items-center justify-center">
             <i class="fa fa-youtube-play mr-2"></i> 观看演示
@@ -131,7 +133,11 @@
         <div class="mt-16 flex flex-wrap justify-center gap-8">
           <div class="flex items-center space-x-2">
             <i class="fa fa-check-circle text-success text-xl"></i>
-            <span>实时语音识别</span>
+            <span>无需下载视频</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fa fa-check-circle text-success text-xl"></i>
+            <span>实时字幕生成</span>
           </div>
           <div class="flex items-center space-x-2">
             <i class="fa fa-check-circle text-success text-xl"></i>
@@ -139,11 +145,7 @@
           </div>
           <div class="flex items-center space-x-2">
             <i class="fa fa-check-circle text-success text-xl"></i>
-            <span>自定义样式</span>
-          </div>
-          <div class="flex items-center space-x-2">
-            <i class="fa fa-check-circle text-success text-xl"></i>
-            <span>导出字幕文件</span>
+            <span>字幕直接保存到网盘</span>
           </div>
         </div>
       </div>
@@ -159,12 +161,105 @@
     <section id="demo" class="py-20 bg-gray-800">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
-          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">实时字幕演示</h2>
-          <p class="text-gray-400 max-w-2xl mx-auto">上传视频或使用示例视频体验实时字幕生成功能。调整设置以获得最佳效果。</p>
+          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">字幕生成演示</h2>
+          <p class="text-gray-400 max-w-2xl mx-auto">登录百度网盘账号，选择视频，一键生成字幕。以下是使用示例。</p>
         </div>
         
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <!-- 视频播放器 -->
+          <!-- 网盘文件列表 -->
+          <div class="bg-gray-900 rounded-xl overflow-hidden shadow-2xl">
+            <div class="p-4 border-b border-gray-800 flex items-center justify-between">
+              <h3 class="font-semibold flex items-center">
+                <i class="fa fa-folder-open text-primary mr-2"></i> 我的网盘文件
+              </h3>
+              <div class="relative">
+                <input type="text" placeholder="搜索视频..." class="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 pr-8 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+                <i class="fa fa-search absolute right-3 top-2 text-gray-400"></i>
+              </div>
+            </div>
+            
+            <div class="p-4 max-h-[500px] overflow-y-auto scrollbar-hide">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center">
+                  <i class="fa fa-chevron-up text-gray-400 mr-2"></i>
+                  <span class="text-sm text-gray-400">全部文件</span>
+                </div>
+                <div class="text-xs text-gray-500">12个项目</div>
+              </div>
+              
+              <!-- 文件列表 -->
+              <div class="space-y-2">
+                <div class="file-item p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer flex items-center" data-path="/video1.mp4" data-type="video">
+                  <i class="fa fa-file-video-o text-primary mr-3 text-xl"></i>
+                  <div class="flex-1">
+                    <p class="font-medium">会议记录.mp4</p>
+                    <p class="text-xs text-gray-500">25.4 MB · 2023-05-15</p>
+                  </div>
+                </div>
+                
+                <div class="file-item p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer flex items-center" data-path="/video2.mp4" data-type="video">
+                  <i class="fa fa-file-video-o text-primary mr-3 text-xl"></i>
+                  <div class="flex-1">
+                    <p class="font-medium">产品介绍.mp4</p>
+                    <p class="text-xs text-gray-500">42.8 MB · 2023-05-20</p>
+                  </div>
+                </div>
+                
+                <div class="file-item p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer flex items-center" data-path="/video3.mp4" data-type="video">
+                  <i class="fa fa-file-video-o text-primary mr-3 text-xl"></i>
+                  <div class="flex-1">
+                    <p class="font-medium">教程视频.mp4</p>
+                    <p class="text-xs text-gray-500">108.5 MB · 2023-06-02</p>
+                  </div>
+                </div>
+                
+                <div class="file-item p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer flex items-center" data-path="/video4.mp4" data-type="video">
+                  <i class="fa fa-file-video-o text-primary mr-3 text-xl"></i>
+                  <div class="flex-1">
+                    <p class="font-medium">演讲记录.mp4</p>
+                    <p class="text-xs text-gray-500">76.2 MB · 2023-06-15</p>
+                  </div>
+                </div>
+                
+                <div class="file-item p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer flex items-center" data-path="/video5.mp4" data-type="video">
+                  <i class="fa fa-file-video-o text-primary mr-3 text-xl"></i>
+                  <div class="flex-1">
+                    <p class="font-medium">访谈视频.mp4</p>
+                    <p class="text-xs text-gray-500">92.7 MB · 2023-06-20</p>
+                  </div>
+                </div>
+                
+                <div class="file-item p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer flex items-center" data-path="/document.pdf" data-type="document">
+                  <i class="fa fa-file-pdf-o text-red-500 mr-3 text-xl"></i>
+                  <div class="flex-1">
+                    <p class="font-medium">项目文档.pdf</p>
+                    <p class="text-xs text-gray-500">12.3 MB · 2023-05-10</p>
+                  </div>
+                </div>
+                
+                <div class="file-item p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer flex items-center" data-path="/presentation.pptx" data-type="document">
+                  <i class="fa fa-file-powerpoint-o text-orange-500 mr-3 text-xl"></i>
+                  <div class="flex-1">
+                    <p class="font-medium">演示文稿.pptx</p>
+                    <p class="text-xs text-gray-500">18.7 MB · 2023-05-25</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="p-4 border-t border-gray-800">
+              <div class="flex items-center justify-between text-sm text-gray-400">
+                <div>
+                  <span class="font-medium">已用空间:</span> 2.5 GB / 2 TB
+                </div>
+                <div class="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+                  <div class="h-full bg-primary" style="width: 0.1%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 视频播放器和字幕 -->
           <div class="lg:col-span-2 bg-gray-900 rounded-xl overflow-hidden shadow-2xl">
             <div class="relative aspect-video bg-black">
               <video id="video-player" class="w-full h-full object-contain" controls>
@@ -174,7 +269,7 @@
               
               <!-- 字幕显示区域 -->
               <div id="subtitle-display" class="absolute bottom-0 left-0 right-0 p-4 bg-black/60 backdrop-blur text-white text-center">
-                <p id="current-subtitle" class="text-xl font-medium text-shadow-lg">点击播放按钮开始视频</p>
+                <p id="current-subtitle" class="text-xl font-medium text-shadow-lg">请从左侧选择一个视频文件</p>
               </div>
               
               <!-- 语音活动指示器 -->
@@ -190,99 +285,106 @@
                 <i class="fa fa-history text-primary mr-2"></i> 字幕历史
               </h3>
               <div id="subtitle-history" class="space-y-2 text-sm text-gray-300">
-                <p class="opacity-80">系统已就绪，等待视频播放...</p>
+                <p class="opacity-80">选择视频并点击"生成字幕"开始</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 控制面板 -->
+        <div class="mt-8 bg-gray-900 rounded-xl p-6 shadow-xl">
+          <div class="flex flex-col md:flex-row gap-4">
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold mb-4 flex items-center">
+                <i class="fa fa-sliders text-primary mr-2"></i> 字幕控制
+              </h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- 语言选择 -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-2">识别语言</label>
+                  <select id="language-select" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-primary focus:border-primary">
+                    <option value="zh-CN">中文 (简体)</option>
+                    <option value="en-US">英语 (美国)</option>
+                    <option value="ja-JP">日语</option>
+                    <option value="ko-KR">韩语</option>
+                    <option value="es-ES">西班牙语</option>
+                    <option value="fr-FR">法语</option>
+                    <option value="de-DE">德语</option>
+                  </select>
+                </div>
+                
+                <!-- 字幕样式 -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-2">字幕样式</label>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label class="block text-xs text-gray-500 mb-1">字体大小</label>
+                      <input type="range" id="font-size" min="12" max="36" value="18" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
+                      <div class="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>小</span>
+                        <span>大</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-xs text-gray-500 mb-1">不透明度</label>
+                      <input type="range" id="opacity" min="50" max="100" value="90" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
+                      <div class="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>透明</span>
+                        <span>不透明</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold mb-4 flex items-center">
+                <i class="fa fa-cog text-primary mr-2"></i> 生成设置
+              </h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- 识别精度 -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-2">识别精度</label>
+                  <div class="flex items-center">
+                    <input type="range" id="accuracy" min="0" max="2" value="1" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
+                    <span class="ml-3 text-sm text-gray-400" id="accuracy-value">平衡</span>
+                  </div>
+                  <div class="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>速度优先</span>
+                    <span>精度优先</span>
+                  </div>
+                </div>
+                
+                <!-- 字幕保存位置 -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-2">保存位置</label>
+                  <div class="relative">
+                    <input type="text" id="save-location" value="/字幕文件/" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 pr-10 text-white focus:ring-2 focus:ring-primary focus:border-primary">
+                    <button class="absolute right-3 top-3 text-gray-400 hover:text-white">
+                      <i class="fa fa-folder-open"></i>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
           
-          <!-- 控制面板 -->
-          <div class="bg-gray-900 rounded-xl p-6 shadow-xl">
-            <h3 class="text-xl font-semibold mb-6 flex items-center">
-              <i class="fa fa-sliders text-primary mr-2"></i> 字幕控制
-            </h3>
-            
-            <!-- 语言选择 -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-400 mb-2">识别语言</label>
-              <select id="language-select" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-primary focus:border-primary">
-                <option value="zh-CN">中文 (简体)</option>
-                <option value="en-US">英语 (美国)</option>
-                <option value="ja-JP">日语</option>
-                <option value="ko-KR">韩语</option>
-                <option value="es-ES">西班牙语</option>
-                <option value="fr-FR">法语</option>
-                <option value="de-DE">德语</option>
-              </select>
-            </div>
-            
-            <!-- 字幕样式 -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-400 mb-2">字幕样式</label>
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-xs text-gray-500 mb-1">字体大小</label>
-                  <input type="range" id="font-size" min="12" max="36" value="18" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
-                  <div class="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>小</span>
-                    <span>大</span>
-                  </div>
-                </div>
-                <div>
-                  <label class="block text-xs text-gray-500 mb-1">不透明度</label>
-                  <input type="range" id="opacity" min="50" max="100" value="90" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
-                  <div class="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>透明</span>
-                    <span>不透明</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- 字幕颜色 -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-400 mb-2">字幕颜色</label>
-              <div class="grid grid-cols-5 gap-2">
-                <button class="w-full h-10 rounded-lg bg-white border-2 border-transparent hover:border-gray-400 transition-all" data-color="white"></button>
-                <button class="w-full h-10 rounded-lg bg-yellow-300 border-2 border-transparent hover:border-gray-400 transition-all" data-color="yellow-300"></button>
-                <button class="w-full h-10 rounded-lg bg-green-400 border-2 border-transparent hover:border-gray-400 transition-all" data-color="green-400"></button>
-                <button class="w-full h-10 rounded-lg bg-blue-400 border-2 border-transparent hover:border-gray-400 transition-all" data-color="blue-400"></button>
-                <button class="w-full h-10 rounded-lg bg-purple-400 border-2 border-transparent hover:border-gray-400 transition-all" data-color="purple-400"></button>
-              </div>
-            </div>
-            
-            <!-- 背景颜色 -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-400 mb-2">背景颜色</label>
-              <div class="grid grid-cols-5 gap-2">
-                <button class="w-full h-10 rounded-lg bg-black/60 border-2 border-transparent hover:border-gray-400 transition-all" data-bg="black/60"></button>
-                <button class="w-full h-10 rounded-lg bg-gray-800/60 border-2 border-transparent hover:border-gray-400 transition-all" data-bg="gray-800/60"></button>
-                <button class="w-full h-10 rounded-lg bg-primary/60 border-2 border-transparent hover:border-gray-400 transition-all" data-bg="primary/60"></button>
-                <button class="w-full h-10 rounded-lg bg-accent/60 border-2 border-transparent hover:border-gray-400 transition-all" data-bg="accent/60"></button>
-                <button class="w-full h-10 rounded-lg bg-transparent border-2 border-dashed border-gray-500 hover:border-gray-400 transition-all" data-bg="transparent"></button>
-              </div>
-            </div>
-            
-            <!-- 按钮控制 -->
-            <div class="flex space-x-3">
-              <button id="start-recognition" class="flex-1 bg-primary hover:bg-primary/90 text-white px-4 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
-                <i class="fa fa-microphone mr-2"></i> 开始识别
-              </button>
-              <button id="stop-recognition" class="flex-1 bg-error hover:bg-error/90 text-white px-4 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center opacity-50 cursor-not-allowed">
-                <i class="fa fa-stop mr-2"></i> 停止
-              </button>
-            </div>
-            
-            <div class="flex space-x-3 mt-3">
-              <button id="download-srt" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white px-4 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center opacity-50 cursor-not-allowed">
-                <i class="fa fa-download mr-2"></i> 导出 SRT
-              </button>
-              <button id="upload-video" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white px-4 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
-                <i class="fa fa-upload mr-2"></i> 上传视频
-              </button>
-            </div>
-            
-            <!-- 上传文件输入 -->
-            <input type="file" id="video-file-input" accept="video/*" class="hidden">
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button id="generate-subtitles" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
+              <i class="fa fa-magic mr-2"></i> 生成字幕
+            </button>
+            <button id="save-to-pan" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center opacity-50 cursor-not-allowed">
+              <i class="fa fa-cloud-upload mr-2"></i> 保存到网盘
+            </button>
+            <button id="download-srt" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center opacity-50 cursor-not-allowed">
+              <i class="fa fa-download mr-2"></i> 下载SRT
+            </button>
+            <button id="cancel-generation" class="bg-error hover:bg-error/90 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center opacity-50 cursor-not-allowed">
+              <i class="fa fa-stop mr-2"></i> 取消
+            </button>
           </div>
         </div>
       </div>
@@ -293,53 +395,53 @@
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
           <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">强大功能</h2>
-          <p class="text-gray-400 max-w-2xl mx-auto">我们的实时字幕生成器拥有一系列强大功能，满足您的各种需求</p>
+          <p class="text-gray-400 max-w-2xl mx-auto">我们的百度网盘字幕生成器拥有一系列强大功能，满足您的各种需求</p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <!-- 功能卡片 1 -->
           <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-700">
             <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
-              <i class="fa fa-bolt text-primary text-xl"></i>
+              <i class="fa fa-cloud text-primary text-xl"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-3">实时语音识别</h3>
-            <p class="text-gray-400">利用先进的语音识别技术，实时将视频中的语音转换为文字，延迟极低。</p>
+            <h3 class="text-xl font-semibold mb-3">网盘直接处理</h3>
+            <p class="text-gray-400">无需下载视频，直接在网盘中处理，节省您的带宽和存储空间。</p>
           </div>
           
           <!-- 功能卡片 2 -->
           <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-700">
             <div class="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
-              <i class="fa fa-language text-accent text-xl"></i>
+              <i class="fa fa-bolt text-accent text-xl"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-3">多语言支持</h3>
-            <p class="text-gray-400">支持多种语言的语音识别，包括中文、英语、日语、韩语等，满足全球化需求。</p>
+            <h3 class="text-xl font-semibold mb-3">AI 语音识别</h3>
+            <p class="text-gray-400">利用先进的AI技术，快速准确地将视频中的语音转换为文字。</p>
           </div>
           
           <!-- 功能卡片 3 -->
           <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-700">
             <div class="w-12 h-12 bg-success/20 rounded-lg flex items-center justify-center mb-4">
-              <i class="fa fa-paint-brush text-success text-xl"></i>
+              <i class="fa fa-language text-success text-xl"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-3">自定义样式</h3>
-            <p class="text-gray-400">灵活调整字幕的字体、颜色、大小和位置，使其与您的视频风格完美匹配。</p>
+            <h3 class="text-xl font-semibold mb-3">多语言支持</h3>
+            <p class="text-gray-400">支持多种语言的语音识别，包括中文、英语、日语、韩语等。</p>
           </div>
           
           <!-- 功能卡片 4 -->
           <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-700">
             <div class="w-12 h-12 bg-info/20 rounded-lg flex items-center justify-center mb-4">
-              <i class="fa fa-download text-info text-xl"></i>
+              <i class="fa fa-paint-brush text-info text-xl"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-3">多种导出格式</h3>
-            <p class="text-gray-400">支持导出SRT、VTT等常见字幕格式，方便您在其他平台和播放器中使用。</p>
+            <h3 class="text-xl font-semibold mb-3">自定义样式</h3>
+            <p class="text-gray-400">灵活调整字幕的字体、颜色、大小和位置，使其与您的视频风格完美匹配。</p>
           </div>
           
           <!-- 功能卡片 5 -->
           <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-700">
             <div class="w-12 h-12 bg-warning/20 rounded-lg flex items-center justify-center mb-4">
-              <i class="fa fa-cog text-warning text-xl"></i>
+              <i class="fa fa-save text-warning text-xl"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-3">高级音频处理</h3>
-            <p class="text-gray-400">内置噪声过滤和语音增强技术，即使在嘈杂环境中也能获得清晰准确的字幕。</p>
+            <h3 class="text-xl font-semibold mb-3">自动保存</h3>
+            <p class="text-gray-400">字幕生成后自动保存到您指定的网盘位置，方便后续使用。</p>
           </div>
           
           <!-- 功能卡片 6 -->
@@ -348,187 +450,14 @@
               <i class="fa fa-lock text-error text-xl"></i>
             </div>
             <h3 class="text-xl font-semibold mb-3">隐私保护</h3>
-            <p class="text-gray-400">所有视频和音频数据仅在本地处理，不会上传到云端，确保您的内容安全。</p>
-          </div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- 设置与API -->
-    <section id="settings" class="py-20 bg-gray-800">
-      <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">灵活设置</h2>
-          <p class="text-gray-400 max-w-2xl mx-auto">根据您的需求定制字幕生成器的各种参数和选项</p>
-        </div>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <!-- 左侧：详细设置 -->
-          <div class="bg-gray-900 rounded-xl p-6 shadow-xl">
-            <h3 class="text-xl font-semibold mb-6 flex items-center">
-              <i class="fa fa-cogs text-primary mr-2"></i> 高级设置
-            </h3>
-            
-            <!-- 识别精度 -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-400 mb-2">识别精度</label>
-              <div class="flex items-center">
-                <input type="range" id="accuracy" min="0" max="2" value="1" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
-                <span class="ml-3 text-sm text-gray-400" id="accuracy-value">平衡</span>
-              </div>
-              <div class="flex justify-between text-xs text-gray-500 mt-1">
-                <span>速度优先</span>
-                <span>精度优先</span>
-              </div>
-            </div>
-            
-            <!-- 灵敏度 -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-400 mb-2">语音灵敏度</label>
-              <div class="flex items-center">
-                <input type="range" id="sensitivity" min="0" max="100" value="70" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
-                <span class="ml-3 text-sm text-gray-400" id="sensitivity-value">70%</span>
-              </div>
-              <div class="flex justify-between text-xs text-gray-500 mt-1">
-                <span>低</span>
-                <span>高</span>
-              </div>
-            </div>
-            
-            <!-- 标点符号 -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-400 mb-2">自动标点</label>
-              <div class="flex items-center space-x-4">
-                <label class="inline-flex items-center">
-                  <input type="radio" name="punctuation" value="auto" checked class="w-4 h-4 text-primary focus:ring-primary border-gray-600">
-                  <span class="ml-2 text-sm text-gray-300">自动</span>
-                </label>
-                <label class="inline-flex items-center">
-                  <input type="radio" name="punctuation" value="none" class="w-4 h-4 text-primary focus:ring-primary border-gray-600">
-                  <span class="ml-2 text-sm text-gray-300">无</span>
-                </label>
-                <label class="inline-flex items-center">
-                  <input type="radio" name="punctuation" value="manual" class="w-4 h-4 text-primary focus:ring-primary border-gray-600">
-                  <span class="ml-2 text-sm text-gray-300">手动</span>
-                </label>
-              </div>
-            </div>
-            
-            <!-- 高级选项 -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-400 mb-2">高级选项</label>
-              <div class="space-y-3">
-                <label class="inline-flex items-center">
-                  <input type="checkbox" id="capitalization" checked class="w-4 h-4 text-primary focus:ring-primary border-gray-600 rounded">
-                  <span class="ml-2 text-sm text-gray-300">自动大写</span>
-                </label>
-                <label class="inline-flex items-center">
-                  <input type="checkbox" id="profanity-filter" checked class="w-4 h-4 text-primary focus:ring-primary border-gray-600 rounded">
-                  <span class="ml-2 text-sm text-gray-300">脏话过滤</span>
-                </label>
-                <label class="inline-flex items-center">
-                  <input type="checkbox" id="speaker-detection" class="w-4 h-4 text-primary focus:ring-primary border-gray-600 rounded">
-                  <span class="ml-2 text-sm text-gray-300">说话人识别</span>
-                </label>
-                <label class="inline-flex items-center">
-                  <input type="checkbox" id="auto-scroll" checked class="w-4 h-4 text-primary focus:ring-primary border-gray-600 rounded">
-                  <span class="ml-2 text-sm text-gray-300">自动滚动历史</span>
-                </label>
-              </div>
-            </div>
-            
-            <!-- 语速 -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-400 mb-2">语速调整</label>
-              <div class="flex items-center">
-                <input type="range" id="speech-rate" min="0.5" max="2" step="0.1" value="1" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
-                <span class="ml-3 text-sm text-gray-400" id="speech-rate-value">1.0x</span>
-              </div>
-              <div class="flex justify-between text-xs text-gray-500 mt-1">
-                <span>慢速</span>
-                <span>快速</span>
-              </div>
-            </div>
-            
-            <button class="w-full bg-primary hover:bg-primary/90 text-white px-4 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
-              <i class="fa fa-save mr-2"></i> 保存设置
-            </button>
-          </div>
-          
-          <!-- 右侧：API 文档 -->
-          <div class="bg-gray-900 rounded-xl p-6 shadow-xl">
-            <h3 class="text-xl font-semibold mb-6 flex items-center">
-              <i class="fa fa-code text-accent mr-2"></i> API 集成
-            </h3>
-            
-            <p class="text-gray-400 mb-6">将我们的实时字幕生成器集成到您的应用程序或网站中。以下是基本的API使用示例：</p>
-            
-            <div class="bg-gray-800 rounded-lg p-4 mb-6">
-              <pre class="text-gray-300 text-sm overflow-x-auto scrollbar-hide"><code>// 初始化字幕生成器
-const subtitleGenerator = new SubtitleGenerator({
-  language: 'zh-CN',
-  accuracy: 'balanced',
-  sensitivity: 70,
-  profanityFilter: true
-});
-
-// 连接到视频源
-subtitleGenerator.connectVideo(videoElement);
-
-// 开始识别
-subtitleGenerator.startRecognition();
-
-// 监听字幕事件
-subtitleGenerator.on('subtitle', (subtitle) => {
-  console.log('新字幕:', subtitle);
-  // 更新UI显示字幕
-});
-
-// 停止识别
-subtitleGenerator.stopRecognition();</code></pre>
-            </div>
-            
-            <h4 class="text-lg font-medium mb-3 text-gray-300">主要方法</h4>
-            <div class="space-y-4">
-              <div class="bg-gray-800/50 rounded-lg p-3">
-                <h5 class="font-medium text-primary mb-1">startRecognition()</h5>
-                <p class="text-sm text-gray-400">开始语音识别并生成字幕</p>
-              </div>
-              
-              <div class="bg-gray-800/50 rounded-lg p-3">
-                <h5 class="font-medium text-primary mb-1">stopRecognition()</h5>
-                <p class="text-sm text-gray-400">停止语音识别</p>
-              </div>
-              
-              <div class="bg-gray-800/50 rounded-lg p-3">
-                <h5 class="font-medium text-primary mb-1">connectVideo(videoElement)</h5>
-                <p class="text-sm text-gray-400">连接到视频元素以捕获音频</p>
-              </div>
-              
-              <div class="bg-gray-800/50 rounded-lg p-3">
-                <h5 class="font-medium text-primary mb-1">setOptions(options)</h5>
-                <p class="text-sm text-gray-400">更新识别选项，如语言、灵敏度等</p>
-              </div>
-              
-              <div class="bg-gray-800/50 rounded-lg p-3">
-                <h5 class="font-medium text-primary mb-1">exportSRT()</h5>
-                <p class="text-sm text-gray-400">导出SRT格式的字幕文件</p>
-              </div>
-            </div>
-            
-            <div class="mt-6">
-              <a href="#" class="text-primary hover:text-primary/80 flex items-center">
-                <span>查看完整API文档</span>
-                <i class="fa fa-arrow-right ml-2"></i>
-              </a>
-            </div>
+            <p class="text-gray-400">所有视频和音频数据仅在本地处理，不会上传到第三方服务器，确保隐私安全。</p>
           </div>
         </div>
       </div>
     </section>
     
     <!-- 使用统计 -->
-    <section class="py-20 bg-gray-900">
+    <section class="py-20 bg-gray-800">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
           <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">用户使用统计</h2>
@@ -536,52 +465,52 @@ subtitleGenerator.stopRecognition();</code></pre>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg border border-gray-700">
+          <div class="bg-gray-900 rounded-xl p-6 shadow-lg border border-gray-700">
             <div class="flex items-center justify-between mb-4">
               <h3 class="text-lg font-semibold text-gray-300">总生成字幕</h3>
               <div class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
                 <i class="fa fa-file-text-o text-primary"></i>
               </div>
             </div>
-            <p class="text-3xl font-bold text-white">125,800+</p>
+            <p class="text-3xl font-bold text-white">58,300+</p>
             <p class="text-sm text-gray-500 mt-1">自2023年上线以来</p>
           </div>
           
-          <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg border border-gray-700">
+          <div class="bg-gray-900 rounded-xl p-6 shadow-lg border border-gray-700">
             <div class="flex items-center justify-between mb-4">
               <h3 class="text-lg font-semibold text-gray-300">活跃用户</h3>
               <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
                 <i class="fa fa-users text-accent"></i>
               </div>
             </div>
-            <p class="text-3xl font-bold text-white">8,500+</p>
+            <p class="text-3xl font-bold text-white">4,200+</p>
             <p class="text-sm text-gray-500 mt-1">每月活跃用户</p>
           </div>
           
-          <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg border border-gray-700">
+          <div class="bg-gray-900 rounded-xl p-6 shadow-lg border border-gray-700">
             <div class="flex items-center justify-between mb-4">
               <h3 class="text-lg font-semibold text-gray-300">识别准确率</h3>
               <div class="w-10 h-10 bg-success/20 rounded-full flex items-center justify-center">
                 <i class="fa fa-check-circle text-success"></i>
               </div>
             </div>
-            <p class="text-3xl font-bold text-white">96.8%</p>
+            <p class="text-3xl font-bold text-white">97.2%</p>
             <p class="text-sm text-gray-500 mt-1">平均识别准确率</p>
           </div>
           
-          <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg border border-gray-700">
+          <div class="bg-gray-900 rounded-xl p-6 shadow-lg border border-gray-700">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-300">支持语言</h3>
+              <h3 class="text-lg font-semibold text-gray-300">处理速度</h3>
               <div class="w-10 h-10 bg-info/20 rounded-full flex items-center justify-center">
-                <i class="fa fa-globe text-info"></i>
+                <i class="fa fa-clock-o text-info"></i>
               </div>
             </div>
-            <p class="text-3xl font-bold text-white">28+</p>
-            <p class="text-sm text-gray-500 mt-1">全球主流语言</p>
+            <p class="text-3xl font-bold text-white">2x</p>
+            <p class="text-sm text-gray-500 mt-1">实时速度的2倍</p>
           </div>
         </div>
         
-        <div class="mt-12 bg-gray-800/50 rounded-xl p-6 shadow-lg border border-gray-700">
+        <div class="mt-12 bg-gray-900 rounded-xl p-6 shadow-lg border border-gray-700">
           <h3 class="text-xl font-semibold mb-6 flex items-center">
             <i class="fa fa-bar-chart text-primary mr-2"></i> 月度使用趋势
           </h3>
@@ -592,81 +521,12 @@ subtitleGenerator.stopRecognition();</code></pre>
       </div>
     </section>
     
-    <!-- 用户评价 -->
-    <section class="py-20 bg-gray-800">
-      <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">用户评价</h2>
-          <p class="text-gray-400 max-w-2xl mx-auto">听听我们的用户如何评价我们的实时字幕生成器</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <!-- 评价卡片 1 -->
-          <div class="bg-gray-900 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all">
-            <div class="flex items-center mb-4">
-              <img src="https://picsum.photos/seed/user1/60/60" alt="用户头像" class="w-12 h-12 rounded-full object-cover">
-              <div class="ml-4">
-                <h4 class="font-semibold">张小明</h4>
-                <p class="text-sm text-gray-500">教育博主</p>
-              </div>
-            </div>
-            <div class="mb-4 text-yellow-400">
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-            </div>
-            <p class="text-gray-300">"作为一名教育博主，我制作了大量的教学视频。这个字幕生成器帮我省下了大量手动打字幕的时间，而且准确率非常高，几乎不需要修改。"</p>
-          </div>
-          
-          <!-- 评价卡片 2 -->
-          <div class="bg-gray-900 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all">
-            <div class="flex items-center mb-4">
-              <img src="https://picsum.photos/seed/user2/60/60" alt="用户头像" class="w-12 h-12 rounded-full object-cover">
-              <div class="ml-4">
-                <h4 class="font-semibold">李佳琪</h4>
-                <p class="text-sm text-gray-500">企业培训师</p>
-              </div>
-            </div>
-            <div class="mb-4 text-yellow-400">
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star-half-o"></i>
-            </div>
-            <p class="text-gray-300">"在企业培训中，我们需要为大量的会议和培训内容创建字幕。这个工具让我们的工作效率提高了数倍，而且自定义选项非常丰富。"</p>
-          </div>
-          
-          <!-- 评价卡片 3 -->
-          <div class="bg-gray-900 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all">
-            <div class="flex items-center mb-4">
-              <img src="https://picsum.photos/seed/user3/60/60" alt="用户头像" class="w-12 h-12 rounded-full object-cover">
-              <div class="ml-4">
-                <h4 class="font-semibold">王大锤</h4>
-                <p class="text-sm text-gray-500">视频制作人</p>
-              </div>
-            </div>
-            <div class="mb-4 text-yellow-400">
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-            </div>
-            <p class="text-gray-300">"我制作多语言的视频内容，这个字幕生成器支持多种语言，而且转换速度快得惊人。界面也很直观，即使是新手也能快速上手。"</p>
-          </div>
-        </div>
-      </div>
-    </section>
-    
     <!-- 常见问题 -->
     <section id="about" class="py-20 bg-gray-900">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
           <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">常见问题</h2>
-          <p class="text-gray-400 max-w-2xl mx-auto">了解更多关于我们的实时字幕生成器的信息</p>
+          <p class="text-gray-400 max-w-2xl mx-auto">了解更多关于我们的百度网盘字幕生成器的信息</p>
         </div>
         
         <div class="max-w-3xl mx-auto">
@@ -674,44 +534,44 @@ subtitleGenerator.stopRecognition();</code></pre>
             <!-- FAQ 项目 1 -->
             <div class="bg-gray-800/50 rounded-xl overflow-hidden">
               <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center">
-                <span class="font-medium">这个工具需要联网使用吗？</span>
+                <span class="font-medium">需要下载百度网盘客户端吗？</span>
                 <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
               </button>
               <div class="faq-content px-6 pb-4 hidden">
-                <p class="text-gray-400">是的，目前这个工具需要联网使用，因为语音识别功能依赖于云端API。我们正在开发离线版本，将在未来的更新中提供。</p>
+                <p class="text-gray-400">不需要，我们的工具直接与百度网盘网页API集成，您只需在网页上登录您的百度账号即可使用，无需下载安装任何客户端。</p>
               </div>
             </div>
             
             <!-- FAQ 项目 2 -->
             <div class="bg-gray-800/50 rounded-xl overflow-hidden">
               <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center">
-                <span class="font-medium">支持哪些视频格式？</span>
+                <span class="font-medium">支持多大的视频文件？</span>
                 <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
               </button>
               <div class="faq-content px-6 pb-4 hidden">
-                <p class="text-gray-400">我们的工具支持大多数常见的视频格式，包括MP4、WebM、AVI、MOV等。如果您遇到特定格式无法加载的问题，请尝试转换为MP4格式。</p>
+                <p class="text-gray-400">我们的工具支持百度网盘内的任意大小视频文件。不过，较大的视频文件可能需要更长的处理时间。对于超过1GB的视频，建议在网络稳定的环境下使用。</p>
               </div>
             </div>
             
             <!-- FAQ 项目 3 -->
             <div class="bg-gray-800/50 rounded-xl overflow-hidden">
               <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center">
-                <span class="font-medium">字幕的准确性如何？</span>
+                <span class="font-medium">字幕生成需要多长时间？</span>
                 <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
               </button>
               <div class="faq-content px-6 pb-4 hidden">
-                <p class="text-gray-400">字幕的准确性取决于多种因素，包括音频质量、说话清晰度和语言复杂性。一般来说，我们的识别准确率在95%以上，但在嘈杂环境或口音较重的情况下可能会有所下降。</p>
+                <p class="text-gray-400">字幕生成时间取决于视频长度和复杂程度。一般来说，我们的系统处理速度是视频实际播放时间的2倍左右。例如，一个10分钟的视频大约需要5分钟生成字幕。</p>
               </div>
             </div>
             
             <!-- FAQ 项目 4 -->
             <div class="bg-gray-800/50 rounded-xl overflow-hidden">
               <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center">
-                <span class="font-medium">生成的字幕可以用于商业用途吗？</span>
+                <span class="font-medium">字幕会保存在哪里？</span>
                 <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
               </button>
               <div class="faq-content px-6 pb-4 hidden">
-                <p class="text-gray-400">是的，您生成的字幕可以用于任何商业或非商业用途。我们不保留您生成的字幕内容的任何权利，所有内容完全归您所有。</p>
+                <p class="text-gray-400">生成的字幕文件会自动保存到您指定的百度网盘目录中，默认保存在"字幕文件"文件夹下。您也可以在设置中自定义保存位置。</p>
               </div>
             </div>
             
@@ -722,7 +582,7 @@ subtitleGenerator.stopRecognition();</code></pre>
                 <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
               </button>
               <div class="faq-content px-6 pb-4 hidden">
-                <p class="text-gray-400">为了获得最佳识别效果，建议使用清晰的音频源，避免背景噪音。您也可以在设置中调整"语音灵敏度"和"识别精度"参数，以适应不同的音频环境。</p>
+                <p class="text-gray-400">为了获得最佳识别效果，建议使用清晰的视频和音频。嘈杂的背景音可能会影响识别准确率。您也可以在设置中调整"识别精度"参数，选择"精度优先"模式以获得更高的准确率。</p>
               </div>
             </div>
           </div>
@@ -739,11 +599,11 @@ subtitleGenerator.stopRecognition();</code></pre>
       
       <div class="container mx-auto px-4 relative z-10">
         <div class="max-w-3xl mx-auto text-center">
-          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-6">立即开始创建专业字幕</h2>
-          <p class="text-xl text-gray-300 mb-8">加入数千名内容创作者的行列，利用我们的实时字幕生成器提升视频质量和可访问性。</p>
+          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-6">立即开始为您的网盘视频添加字幕</h2>
+          <p class="text-xl text-gray-300 mb-8">加入数千名内容创作者的行列，利用我们的百度网盘字幕生成器提升视频质量和可访问性。</p>
           <div class="flex flex-col sm:flex-row justify-center gap-4">
-            <button class="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
-              <i class="fa fa-rocket mr-2"></i> 免费开始使用
+            <button id="cta-login-button" class="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
+              <i class="fa fa-cloud mr-2"></i> 登录百度网盘
             </button>
             <button class="bg-transparent hover:bg-white/10 text-white border border-white/30 px-8 py-4 rounded-lg transition-all flex items-center justify-center">
               <i class="fa fa-book mr-2"></i> 查看使用教程
@@ -761,10 +621,10 @@ subtitleGenerator.stopRecognition();</code></pre>
         <!-- 公司信息 -->
         <div>
           <div class="flex items-center space-x-2 mb-4">
-            <i class="fa fa-closed-captioning-o text-primary text-2xl"></i>
-            <h2 class="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">SubGenius</h2>
+            <i class="fa fa-cloud text-primary text-2xl"></i>
+            <h2 class="text-xl font-bold pan-gradient bg-clip-text text-transparent">网盘字幕助手</h2>
           </div>
-          <p class="text-gray-400 mb-4">实时视频字幕生成工具，让您的内容更加无障碍。</p>
+          <p class="text-gray-400 mb-4">百度网盘视频字幕自动生成工具，让您的视频内容更加无障碍。</p>
           <div class="flex space-x-4">
             <a href="#" class="text-gray-400 hover:text-primary transition-colors">
               <i class="fa fa-twitter"></i>
@@ -819,7 +679,7 @@ subtitleGenerator.stopRecognition();</code></pre>
       </div>
       
       <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-        <p class="text-gray-500 text-sm">© 2025 SubGenius. 保留所有权利。</p>
+        <p class="text-gray-500 text-sm">© 2025 网盘字幕助手. 保留所有权利。</p>
         <div class="flex space-x-6 mt-4 md:mt-0">
           <a href="#" class="text-gray-500 hover:text-primary text-sm transition-colors">隐私政策</a>
           <a href="#" class="text-gray-500 hover:text-primary text-sm transition-colors">服务条款</a>
@@ -851,14 +711,273 @@ subtitleGenerator.stopRecognition();</code></pre>
       
       mobileMenuButton.addEventListener('click', function() {
         mobileMenu.classList.toggle('hidden');
-        const icon = mobileMenuButton.querySelector('i');
-        if (mobileMenu.classList.contains('hidden')) {
-          icon.classList.remove('fa-times');
-          icon.classList.add('fa-bars');
-        } else {
-          icon.classList.remove('fa-bars');
-          icon.classList.add('fa-times');
+      });
+      
+      // 文件选择功能
+      const fileItems = document.querySelectorAll('.file-item');
+      const videoPlayer = document.getElementById('video-player');
+      const currentSubtitle = document.getElementById('current-subtitle');
+      const subtitleHistory = document.getElementById('subtitle-history');
+      const generateButton = document.getElementById('generate-subtitles');
+      const saveButton = document.getElementById('save-to-pan');
+      const downloadButton = document.getElementById('download-srt');
+      const cancelButton = document.getElementById('cancel-generation');
+      const voiceIndicator = document.getElementById('voice-indicator');
+      const voiceStatus = document.getElementById('voice-status');
+      
+      let selectedVideo = null;
+      let isGenerating = false;
+      let subtitles = [];
+      let subtitleIndex = 0;
+      
+      // 选择文件
+      fileItems.forEach(item => {
+        if (item.dataset.type === 'video') {
+          item.addEventListener('click', function() {
+            // 移除之前的选中状态
+            document.querySelectorAll('.file-item').forEach(i => {
+              i.classList.remove('bg-gray-800/50');
+            });
+            
+            // 添加选中状态
+            this.classList.add('bg-gray-800/50');
+            
+            // 更新视频源
+            selectedVideo = this.dataset.path;
+            videoPlayer.src = 'https://assets.mixkit.co/videos/preview/mixkit-businesswoman-presenting-a-report-4240-large.mp4'; // 演示视频
+            videoPlayer.load();
+            
+            // 重置字幕
+            currentSubtitle.textContent = '视频已加载，请点击"生成字幕"';
+            subtitleHistory.innerHTML = '<p class="opacity-80">视频已加载，请点击"生成字幕"开始</p>';
+            
+            // 启用生成按钮
+            generateButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            saveButton.classList.add('opacity-50', 'cursor-not-allowed');
+            downloadButton.classList.add('opacity-50', 'cursor-not-allowed');
+          });
         }
+      });
+      
+      // 生成字幕
+      generateButton.addEventListener('click', function() {
+        if (!selectedVideo || isGenerating) return;
+        
+        isGenerating = true;
+        generateButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 生成中...';
+        generateButton.classList.add('opacity-70');
+        cancelButton.classList.remove('opacity-50', 'cursor-not-allowed');
+        
+        // 清空字幕历史
+        subtitleHistory.innerHTML = '<p class="opacity-80">字幕生成中...</p>';
+        currentSubtitle.textContent = '字幕生成中...';
+        
+        // 模拟字幕生成过程
+        voiceIndicator.classList.remove('bg-gray-500', 'bg-success');
+        voiceIndicator.classList.add('bg-warning');
+        voiceStatus.textContent = '处理中...';
+        
+        // 模拟生成字幕延迟
+        setTimeout(() => {
+          // 重置字幕数据
+          subtitles = [
+            { start: 0, end: 5, text: "大家好，欢迎参加本次产品介绍会。" },
+            { start: 6, end: 10, text: "今天我们将介绍我们的最新产品。" },
+            { start: 11, end: 15, text: "这款产品集成了多项创新技术。" },
+            { start: 16, end: 20, text: "将为您带来前所未有的体验。" },
+            { start: 21, end: 25, text: "首先，让我们看看它的外观设计。" },
+            { start: 26, end: 30, text: "采用了极简主义风格，非常美观。" },
+            { start: 31, end: 35, text: "同时也考虑了实用性和舒适性。" },
+            { start: 36, end: 40, text: "接下来，我们将介绍它的核心功能。" },
+            { start: 41, end: 45, text: "这项功能将彻底改变您的工作方式。" },
+            { start: 46, end: 50, text: "提高效率，节省时间，降低成本。" },
+            { start: 51, end: 55, text: "我们相信，这款产品将成为您的得力助手。" },
+            { start: 56, end: 60, text: "感谢您的聆听，现在请观看演示。" }
+          ];
+          
+          subtitleIndex = 0;
+          currentSubtitle.textContent = subtitles[0].text;
+          
+          // 更新字幕历史
+          subtitleHistory.innerHTML = '';
+          subtitles.forEach(sub => {
+            const subElement = document.createElement('p');
+            subElement.textContent = `${formatTime(sub.start)} - ${formatTime(sub.end)}: ${sub.text}`;
+            subElement.classList.add('opacity-70');
+            subtitleHistory.appendChild(subElement);
+          });
+          
+          // 启用保存和下载按钮
+          saveButton.classList.remove('opacity-50', 'cursor-not-allowed');
+          downloadButton.classList.remove('opacity-50', 'cursor-not-allowed');
+          
+          // 重置UI状态
+          isGenerating = false;
+          generateButton.innerHTML = '<i class="fa fa-magic mr-2"></i> 生成字幕';
+          generateButton.classList.remove('opacity-70');
+          cancelButton.classList.add('opacity-50', 'cursor-not-allowed');
+          
+          // 更新语音指示器
+          voiceIndicator.classList.remove('bg-warning');
+          voiceIndicator.classList.add('bg-success');
+          voiceStatus.textContent = '语音识别完成';
+          
+          // 视频播放时显示相应字幕
+          videoPlayer.addEventListener('timeupdate', updateSubtitles);
+          
+          // 如果视频已暂停，开始播放
+          if (videoPlayer.paused) {
+            videoPlayer.play();
+          }
+        }, 3000); // 3秒后完成生成
+      });
+      
+      // 取消生成
+      cancelButton.addEventListener('click', function() {
+        if (!isGenerating) return;
+        
+        isGenerating = false;
+        generateButton.innerHTML = '<i class="fa fa-magic mr-2"></i> 生成字幕';
+        generateButton.classList.remove('opacity-70');
+        cancelButton.classList.add('opacity-50', 'cursor-not-allowed');
+        
+        currentSubtitle.textContent = '字幕生成已取消';
+        voiceIndicator.classList.remove('bg-warning');
+        voiceIndicator.classList.add('bg-gray-500');
+        voiceStatus.textContent = '未检测到语音';
+      });
+      
+      // 保存到网盘
+      saveButton.addEventListener('click', function() {
+        if (!subtitles.length || isGenerating) return;
+        
+        // 模拟保存过程
+        saveButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 保存中...';
+        
+        setTimeout(() => {
+          saveButton.innerHTML = '<i class="fa fa-check mr-2"></i> 已保存';
+          saveButton.classList.add('bg-success');
+          
+          // 2秒后恢复原状
+          setTimeout(() => {
+            saveButton.innerHTML = '<i class="fa fa-cloud-upload mr-2"></i> 保存到网盘';
+            saveButton.classList.remove('bg-success');
+          }, 2000);
+        }, 1500);
+      });
+      
+      // 下载SRT
+      downloadButton.addEventListener('click', function() {
+        if (!subtitles.length || isGenerating) return;
+        
+        // 生成SRT内容
+        let srtContent = '';
+        subtitles.forEach((sub, index) => {
+          srtContent += `${index + 1}\n`;
+          srtContent += `${formatTimeSRT(sub.start)} --> ${formatTimeSRT(sub.end)}\n`;
+          srtContent += `${sub.text}\n\n`;
+        });
+        
+        // 创建下载链接
+        const blob = new Blob([srtContent], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = selectedVideo.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + '.srt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+      
+      // 更新字幕显示
+      function updateSubtitles() {
+        const currentTime = videoPlayer.currentTime;
+        
+        // 查找当前应该显示的字幕
+        for (let i = 0; i < subtitles.length; i++) {
+          if (currentTime >= subtitles[i].start && currentTime <= subtitles[i].end) {
+            if (subtitleIndex !== i) {
+              subtitleIndex = i;
+              currentSubtitle.textContent = subtitles[i].text;
+              
+              // 高亮显示当前字幕
+              const subtitleElements = subtitleHistory.querySelectorAll('p');
+              subtitleElements.forEach((el, idx) => {
+                if (idx === i) {
+                  el.classList.add('text-white', 'font-medium', 'opacity-100');
+                  el.classList.remove('opacity-70');
+                } else {
+                  el.classList.remove('text-white', 'font-medium', 'opacity-100');
+                  el.classList.add('opacity-70');
+                }
+              });
+            }
+            return;
+          }
+        }
+        
+        // 如果没有匹配的字幕
+        currentSubtitle.textContent = '';
+      }
+      
+      // 格式化时间为秒:毫秒
+      function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      }
+      
+      // 格式化为SRT时间格式
+      function formatTimeSRT(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = Math.floor(seconds % 60);
+        const ms = Math.floor((seconds - Math.floor(seconds)) * 1000);
+        return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')},${ms.toString().padStart(3, '0')}`;
+      }
+      
+      // 字幕样式控制
+      const fontSizeSlider = document.getElementById('font-size');
+      const opacitySlider = document.getElementById('opacity');
+      
+      fontSizeSlider.addEventListener('input', function() {
+        currentSubtitle.style.fontSize = `${this.value}px`;
+      });
+      
+      opacitySlider.addEventListener('input', function() {
+        document.getElementById('subtitle-display').style.opacity = this.value / 100;
+      });
+      
+      // 识别精度控制
+      const accuracySlider = document.getElementById('accuracy');
+      const accuracyValue = document.getElementById('accuracy-value');
+      
+      accuracySlider.addEventListener('input', function() {
+        switch (this.value) {
+          case '0':
+            accuracyValue.textContent = '速度优先';
+            break;
+          case '1':
+            accuracyValue.textContent = '平衡';
+            break;
+          case '2':
+            accuracyValue.textContent = '精度优先';
+            break;
+        }
+      });
+      
+      // FAQ 折叠面板
+      const faqToggles = document.querySelectorAll('.faq-toggle');
+      
+      faqToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+          const content = this.nextElementSibling;
+          const icon = this.querySelector('i');
+          
+          content.classList.toggle('hidden');
+          icon.classList.toggle('rotate-180');
+        });
       });
       
       // 平滑滚动
@@ -871,51 +990,39 @@ subtitleGenerator.stopRecognition();</code></pre>
           
           if (targetElement) {
             window.scrollTo({
-              top: targetElement.offsetTop - 80,
+              top: targetElement.offsetTop - 80, // 考虑导航栏高度
               behavior: 'smooth'
             });
             
-            // 如果是在移动端，点击后关闭菜单
+            // 如果是移动端，点击后关闭菜单
             if (!mobileMenu.classList.contains('hidden')) {
               mobileMenu.classList.add('hidden');
-              const icon = mobileMenuButton.querySelector('i');
-              icon.classList.remove('fa-times');
-              icon.classList.add('fa-bars');
             }
           }
         });
       });
       
-      // FAQ 切换
-      document.querySelectorAll('.faq-toggle').forEach(toggle => {
-        toggle.addEventListener('click', function() {
-          const content = this.nextElementSibling;
-          const icon = this.querySelector('i');
-          
-          content.classList.toggle('hidden');
-          icon.classList.toggle('rotate-180');
+      // 登录按钮点击事件
+      const loginButtons = document.querySelectorAll('#login-button, #mobile-login-button, #hero-login-button, #cta-login-button');
+      
+      loginButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          alert('百度网盘登录功能将在实际部署时实现');
         });
       });
       
       // 初始化图表
       const ctx = document.getElementById('usageChart').getContext('2d');
-      new Chart(ctx, {
+      const usageChart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
           datasets: [{
             label: '生成字幕数量',
-            data: [8500, 12000, 14500, 18000, 22000, 25000, 28000, 32000, 36000, 42000, 48000, 55000],
-            borderColor: '#165DFF',
-            backgroundColor: 'rgba(22, 93, 255, 0.1)',
-            tension: 0.3,
-            fill: true
-          }, {
-            label: '活跃用户',
-            data: [2500, 3200, 3800, 4500, 5200, 5800, 6300, 6800, 7200, 7800, 8200, 8500],
-            borderColor: '#8B5CF6',
-            backgroundColor: 'rgba(139, 92, 246, 0.1)',
-            tension: 0.3,
+            data: [1200, 1900, 3000, 5000, 7000, 9500, 12000, 15000, 19000, 24000, 32000, 42000],
+            borderColor: '#22C55E',
+            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+            tension: 0.4,
             fill: true
           }]
         },
@@ -925,293 +1032,34 @@ subtitleGenerator.stopRecognition();</code></pre>
           plugins: {
             legend: {
               position: 'top',
-              labels: {
-                color: '#94A3B8'
-              }
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
             }
           },
           scales: {
             y: {
               beginAtZero: true,
               grid: {
-                color: 'rgba(148, 163, 184, 0.1)'
+                color: 'rgba(255, 255, 255, 0.1)'
               },
               ticks: {
-                color: '#94A3B8'
+                color: 'rgba(255, 255, 255, 0.7)'
               }
             },
             x: {
               grid: {
-                color: 'rgba(148, 163, 184, 0.1)'
+                color: 'rgba(255, 255, 255, 0.1)'
               },
               ticks: {
-                color: '#94A3B8'
+                color: 'rgba(255, 255, 255, 0.7)'
               }
             }
           }
         }
       });
-      
-      // 字幕生成器功能模拟
-      const videoPlayer = document.getElementById('video-player');
-      const startButton = document.getElementById('start-recognition');
-      const stopButton = document.getElementById('stop-recognition');
-      const downloadButton = document.getElementById('download-srt');
-      const subtitleDisplay = document.getElementById('current-subtitle');
-      const subtitleHistory = document.getElementById('subtitle-history');
-      const voiceIndicator = document.getElementById('voice-indicator');
-      const voiceStatus = document.getElementById('voice-status');
-      const languageSelect = document.getElementById('language-select');
-      const fontSizeSlider = document.getElementById('font-size');
-      const opacitySlider = document.getElementById('opacity');
-      const speechRateSlider = document.getElementById('speech-rate');
-      const accuracySlider = document.getElementById('accuracy');
-      const sensitivitySlider = document.getElementById('sensitivity');
-      const speechRateValue = document.getElementById('speech-rate-value');
-      const accuracyValue = document.getElementById('accuracy-value');
-      const sensitivityValue = document.getElementById('sensitivity-value');
-      const uploadButton = document.getElementById('upload-video');
-      const videoFileInput = document.getElementById('video-file-input');
-      
-      // 字幕样式设置
-      const colorButtons = document.querySelectorAll('[data-color]');
-      const bgButtons = document.querySelectorAll('[data-bg]');
-      
-      // 模拟字幕数据
-      const sampleSubtitles = [
-        { text: "大家好，欢迎使用我们的实时字幕生成器。", startTime: 0, endTime: 5 },
-        { text: "这个工具可以帮助您快速为视频生成准确的字幕。", startTime: 5, endTime: 10 },
-        { text: "它支持多种语言，包括中文、英文、日文等。", startTime: 10, endTime: 15 },
-        { text: "您可以自定义字幕的样式，使其更符合您的需求。", startTime: 15, endTime: 20 },
-        { text: "字幕生成后，您可以下载为SRT格式，方便在各种播放器中使用。", startTime: 20, endTime: 25 },
-        { text: "无论是教育视频、会议记录还是自媒体内容，都能从中受益。", startTime: 25, endTime: 30 },
-        { text: "现在，让我们开始体验这个强大的工具吧！", startTime: 30, endTime: 35 }
-      ];
-      
-      let recognitionActive = false;
-      let currentSubtitleIndex = 0;
-      let subtitleTimer = null;
-      let subtitleColor = 'white';
-      let subtitleBg = 'black/60';
-      
-      // 模拟语音识别
-      function startRecognition() {
-        if (recognitionActive) return;
-        
-        recognitionActive = true;
-        startButton.classList.add('opacity-50', 'cursor-not-allowed');
-        stopButton.classList.remove('opacity-50', 'cursor-not-allowed');
-        downloadButton.classList.remove('opacity-50', 'cursor-not-allowed');
-        
-        voiceIndicator.classList.remove('bg-gray-500');
-        voiceIndicator.classList.add('bg-success', 'animate-pulse');
-        voiceStatus.textContent = '正在识别';
-        
-        // 清空历史记录
-        subtitleHistory.innerHTML = '';
-        
-        // 模拟视频播放
-        videoPlayer.play().catch(e => console.log('视频自动播放失败:', e));
-        
-        // 模拟字幕生成
-        currentSubtitleIndex = 0;
-        generateNextSubtitle();
-      }
-      
-      function stopRecognition() {
-        if (!recognitionActive) return;
-        
-        recognitionActive = false;
-        startButton.classList.remove('opacity-50', 'cursor-not-allowed');
-        stopButton.classList.add('opacity-50', 'cursor-not-allowed');
-        
-        voiceIndicator.classList.remove('bg-success', 'animate-pulse');
-        voiceIndicator.classList.add('bg-gray-500');
-        voiceStatus.textContent = '未检测到语音';
-        
-        // 停止模拟字幕生成
-        if (subtitleTimer) {
-          clearTimeout(subtitleTimer);
-          subtitleTimer = null;
-        }
-        
-        // 重置字幕显示
-        subtitleDisplay.textContent = '点击开始按钮启动字幕识别';
-      }
-      
-      function generateNextSubtitle() {
-        if (currentSubtitleIndex >= sampleSubtitles.length) {
-          // 所有字幕生成完毕
-          subtitleDisplay.textContent = '字幕生成完毕';
-          voiceIndicator.classList.remove('bg-success', 'animate-pulse');
-          voiceIndicator.classList.add('bg-gray-500');
-          voiceStatus.textContent = '识别完成';
-          return;
-        }
-        
-        const subtitle = sampleSubtitles[currentSubtitleIndex];
-        subtitleDisplay.textContent = subtitle.text;
-        
-        // 添加到历史记录
-        const historyItem = document.createElement('p');
-        historyItem.textContent = subtitle.text;
-        historyItem.className = 'opacity-80';
-        subtitleHistory.appendChild(historyItem);
-        
-        // 滚动到底部
-        subtitleHistory.scrollTop = subtitleHistory.scrollHeight;
-        
-        // 设置下一个字幕的计时器
-        const duration = subtitle.endTime - subtitle.startTime;
-        currentSubtitleIndex++;
-        
-        subtitleTimer = setTimeout(generateNextSubtitle, duration * 1000);
-      }
-      
-      // 下载SRT文件
-      function downloadSRT() {
-        if (!recognitionActive && currentSubtitleIndex === 0) {
-          alert('请先生成字幕');
-          return;
-        }
-        
-        let srtContent = '';
-        
-        sampleSubtitles.forEach((subtitle, index) => {
-          const startTime = formatTime(subtitle.startTime);
-          const endTime = formatTime(subtitle.endTime);
-          
-          srtContent += `${index + 1}\n`;
-          srtContent += `${startTime} --> ${endTime}\n`;
-          srtContent += `${subtitle.text}\n\n`;
-        });
-        
-        const blob = new Blob([srtContent], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'subtitles.srt';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-      
-      // 格式化时间为SRT格式
-      function formatTime(seconds) {
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const secs = Math.floor(seconds % 60);
-        const millis = Math.round((seconds - Math.floor(seconds)) * 1000);
-        
-        return `${padZero(hours)}:${padZero(minutes)}:${padZero(secs)},${padZero(millis, 3)}`;
-      }
-      
-      // 补零
-      function padZero(num, length = 2) {
-        return num.toString().padStart(length, '0');
-      }
-      
-      // 上传视频
-      function uploadVideo() {
-        videoFileInput.click();
-      }
-      
-      videoFileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-          const videoUrl = URL.createObjectURL(file);
-          videoPlayer.src = videoUrl;
-          videoPlayer.load();
-          
-          // 重置字幕状态
-          stopRecognition();
-          subtitleDisplay.textContent = '点击播放按钮开始视频';
-          subtitleHistory.innerHTML = '<p class="opacity-80">系统已就绪，等待视频播放...</p>';
-        }
-      });
-      
-      // 更新字幕样式
-      function updateSubtitleStyle() {
-        subtitleDisplay.style.fontSize = `${fontSizeSlider.value}px`;
-        subtitleDisplay.style.opacity = opacitySlider.value / 100;
-        subtitleDisplay.style.color = `rgb(var(--${subtitleColor}-rgb))`;
-        
-        if (subtitleBg === 'transparent') {
-          subtitleDisplay.parentElement.style.backgroundColor = 'transparent';
-        } else {
-          const [color, opacity] = subtitleBg.split('/');
-          subtitleDisplay.parentElement.style.backgroundColor = `rgba(var(--${color}-rgb), ${opacity})`;
-        }
-      }
-      
-      // 事件监听
-      startButton.addEventListener('click', startRecognition);
-      stopButton.addEventListener('click', stopRecognition);
-      downloadButton.addEventListener('click', downloadSRT);
-      uploadButton.addEventListener('click', uploadVideo);
-      
-      // 字幕样式设置
-      fontSizeSlider.addEventListener('input', updateSubtitleStyle);
-      opacitySlider.addEventListener('input', updateSubtitleStyle);
-      
-      colorButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          colorButtons.forEach(btn => btn.classList.remove('border-white'));
-          this.classList.add('border-white');
-          subtitleColor = this.getAttribute('data-color');
-          updateSubtitleStyle();
-        });
-      });
-      
-      bgButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          bgButtons.forEach(btn => btn.classList.remove('border-white'));
-          this.classList.add('border-white');
-          subtitleBg = this.getAttribute('data-bg');
-          updateSubtitleStyle();
-        });
-      });
-      
-      // 设置初始选中的样式
-      document.querySelector('[data-color="white"]').classList.add('border-white');
-      document.querySelector('[data-bg="black/60"]').classList.add('border-white');
-      
-      // 更新设置值显示
-      speechRateSlider.addEventListener('input', function() {
-        speechRateValue.textContent = `${this.value}x`;
-      });
-      
-      accuracySlider.addEventListener('input', function() {
-        const values = ['速度优先', '平衡', '精度优先'];
-        accuracyValue.textContent = values[this.value];
-      });
-      
-      sensitivitySlider.addEventListener('input', function() {
-        sensitivityValue.textContent = `${this.value}%`;
-      });
-      
-      // 初始化设置值显示
-      speechRateValue.textContent = `${speechRateSlider.value}x`;
-      sensitivityValue.textContent = `${sensitivitySlider.value}%`;
-      
-      // 视频播放状态监听
-      videoPlayer.addEventListener('play', function() {
-        if (!recognitionActive) {
-          subtitleDisplay.textContent = '点击开始按钮启动字幕识别';
-        }
-      });
-      
-      videoPlayer.addEventListener('pause', function() {
-        if (recognitionActive) {
-          stopRecognition();
-        }
-      });
-      
-      // 初始化字幕样式
-      updateSubtitleStyle();
     });
   </script>
 </body>
-</html>
-  
+</html>  
