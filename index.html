@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>百度网盘视频字幕生成器</title>
+  <title>皇帝选举投票系统</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
@@ -14,11 +14,11 @@
       theme: {
         extend: {
           colors: {
-            primary: '#22C55E', // 百度绿
-            secondary: '#36D399',
-            accent: '#8B5CF6',
-            neutral: '#1E293B',
-            'base-100': '#FFFFFF',
+            primary: '#D97706', // 主色调-金色
+            secondary: '#10B981', // 辅助色-绿色
+            accent: '#8B5CF6', // 强调色-紫色
+            neutral: '#1F2937', // 中性色-深灰
+            'base-100': '#111827', // 背景色-更深灰
             'info': '#3ABFF8',
             'success': '#36D399',
             'warning': '#FBBD23',
@@ -53,25 +53,62 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
-      .pan-gradient {
-        background: linear-gradient(135deg, #22C55E 0%, #10B981 100%);
+      .voting-card {
+        transition: all 0.3s ease;
+      }
+      .voting-card:hover {
+        transform: translateY(-5px);
+      }
+      .vote-animation {
+        animation: pulse 0.5s ease-in-out;
+      }
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+      }
+      .rank-up {
+        animation: rank-up 1s ease-out;
+      }
+      @keyframes rank-up {
+        0% { color: #36D399; }
+        100% { color: inherit; }
+      }
+      .rank-down {
+        animation: rank-down 1s ease-out;
+      }
+      @keyframes rank-down {
+        0% { color: #F87272; }
+        100% { color: inherit; }
+      }
+      .emperor-crown {
+        color: #D97706;
+        font-size: 1.2em;
+      }
+      .young-prince-crown {
+        color: #8B5CF6;
+        font-size: 1em;
+      }
+      .prince-crown {
+        color: #3ABFF8;
+        font-size: 0.9em;
       }
     }
   </style>
 </head>
-<body class="font-inter bg-gray-900 text-gray-100 min-h-screen flex flex-col">
+<body class="font-inter bg-base-100 text-gray-100 min-h-screen flex flex-col">
   <!-- 导航栏 -->
   <header class="bg-neutral/80 backdrop-blur fixed w-full z-50 transition-all duration-300" id="navbar">
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center space-x-2">
-        <i class="fa fa-cloud text-primary text-2xl"></i>
-        <h1 class="text-xl font-bold pan-gradient bg-clip-text text-transparent">网盘字幕助手</h1>
+        <i class="fa fa-crown text-primary text-2xl"></i>
+        <h1 class="text-xl font-bold">皇帝选举投票系统</h1>
       </div>
       
       <nav class="hidden md:flex items-center space-x-6">
-        <a href="#features" class="text-gray-300 hover:text-primary transition-colors">功能</a>
-        <a href="#demo" class="text-gray-300 hover:text-primary transition-colors">演示</a>
-        <a href="#settings" class="text-gray-300 hover:text-primary transition-colors">设置</a>
+        <a href="#voting" class="text-gray-300 hover:text-primary transition-colors">投票</a>
+        <a href="#ranking" class="text-gray-300 hover:text-primary transition-colors">排名</a>
+        <a href="#stats" class="text-gray-300 hover:text-primary transition-colors">统计</a>
         <a href="#about" class="text-gray-300 hover:text-primary transition-colors">关于</a>
       </nav>
       
@@ -80,7 +117,7 @@
           <i class="fa fa-moon-o"></i>
         </button>
         <button id="login-button" class="hidden md:block bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all transform hover:scale-105 flex items-center">
-          <i class="fa fa-sign-in mr-2"></i> 登录网盘
+          <i class="fa fa-user mr-2"></i> 登录
         </button>
         <button id="mobile-menu-button" class="md:hidden p-2 rounded-full hover:bg-gray-700 transition-colors">
           <i class="fa fa-bars"></i>
@@ -91,12 +128,12 @@
     <!-- 移动端菜单 -->
     <div id="mobile-menu" class="md:hidden bg-neutral/95 backdrop-blur hidden">
       <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
-        <a href="#features" class="text-gray-300 hover:text-primary py-2 transition-colors">功能</a>
-        <a href="#demo" class="text-gray-300 hover:text-primary py-2 transition-colors">演示</a>
-        <a href="#settings" class="text-gray-300 hover:text-primary py-2 transition-colors">设置</a>
+        <a href="#voting" class="text-gray-300 hover:text-primary py-2 transition-colors">投票</a>
+        <a href="#ranking" class="text-gray-300 hover:text-primary py-2 transition-colors">排名</a>
+        <a href="#stats" class="text-gray-300 hover:text-primary py-2 transition-colors">统计</a>
         <a href="#about" class="text-gray-300 hover:text-primary py-2 transition-colors">关于</a>
         <button id="mobile-login-button" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
-          <i class="fa fa-sign-in mr-2"></i> 登录网盘
+          <i class="fa fa-user mr-2"></i> 登录
         </button>
       </div>
     </div>
@@ -105,509 +142,208 @@
   <!-- 主内容 -->
   <main class="flex-grow pt-16">
     <!-- 英雄区域 -->
-    <section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+    <section class="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
       <div class="absolute inset-0 z-0">
-        <video autoplay muted loop class="w-full h-full object-cover opacity-30">
-          <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-cloud-storage-1271-large.mp4" type="video/mp4">
-        </video>
-        <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 to-gray-900"></div>
+        <img src="https://picsum.photos/seed/palace/1920/1080" alt="背景" class="w-full h-full object-cover opacity-20">
+        <div class="absolute inset-0 bg-gradient-to-b from-base-100/80 to-base-100"></div>
       </div>
       
       <div class="container mx-auto px-4 z-10 text-center">
-        <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold mb-6 leading-tight">
-          <span class="pan-gradient bg-clip-text text-transparent">百度网盘视频</span>
-          <br>字幕自动生成
+        <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6 leading-tight">
+          皇帝<span class="text-primary">选举</span>投票系统
         </h1>
         <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-300 max-w-2xl mx-auto mb-8">
-          一键为百度网盘内的视频生成精准字幕，支持多语言识别和自定义样式。提升视频可访问性和用户体验。
+          为您心目中的皇帝、小皇弟和皇弟投票，每天限投一票，实时查看排名变化
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-4">
-          <button id="hero-login-button" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
-            <i class="fa fa-cloud mr-2"></i> 登录网盘开始使用
+          <button id="hero-vote-button" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
+            <i class="fa fa-thumbs-up mr-2"></i> 立即投票
           </button>
           <button class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-all flex items-center justify-center">
-            <i class="fa fa-youtube-play mr-2"></i> 观看演示
+            <i class="fa fa-bar-chart mr-2"></i> 查看排名
           </button>
         </div>
-        
-        <div class="mt-16 flex flex-wrap justify-center gap-8">
-          <div class="flex items-center space-x-2">
-            <i class="fa fa-check-circle text-success text-xl"></i>
-            <span>无需下载视频</span>
-          </div>
-          <div class="flex items-center space-x-2">
-            <i class="fa fa-check-circle text-success text-xl"></i>
-            <span>实时字幕生成</span>
-          </div>
-          <div class="flex items-center space-x-2">
-            <i class="fa fa-check-circle text-success text-xl"></i>
-            <span>多语言支持</span>
-          </div>
-          <div class="flex items-center space-x-2">
-            <i class="fa fa-check-circle text-success text-xl"></i>
-            <span>字幕直接保存到网盘</span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="absolute bottom-10 left-0 right-0 flex justify-center">
-        <a href="#demo" class="text-gray-400 hover:text-white animate-bounce">
-          <i class="fa fa-chevron-down text-2xl"></i>
-        </a>
       </div>
     </section>
     
-    <!-- 演示区域 -->
-    <section id="demo" class="py-20 bg-gray-800">
+    <!-- 投票区域 -->
+    <section id="voting" class="py-16 bg-base-100">
       <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">字幕生成演示</h2>
-          <p class="text-gray-400 max-w-2xl mx-auto">登录百度网盘账号，选择视频，一键生成字幕。以下是使用示例。</p>
+        <div class="text-center mb-12">
+          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">候选人投票</h2>
+          <p class="text-gray-400 max-w-2xl mx-auto">选择您支持的候选人投票，每人每天限投一票</p>
         </div>
         
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <!-- 网盘文件列表 -->
-          <div class="bg-gray-900 rounded-xl overflow-hidden shadow-2xl">
-            <div class="p-4 border-b border-gray-800 flex items-center justify-between">
-              <h3 class="font-semibold flex items-center">
-                <i class="fa fa-folder-open text-primary mr-2"></i> 我的网盘文件
-              </h3>
-              <div class="relative">
-                <input type="text" placeholder="搜索视频..." class="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 pr-8 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                <i class="fa fa-search absolute right-3 top-2 text-gray-400"></i>
-              </div>
-            </div>
-            
-            <div class="p-4 max-h-[500px] overflow-y-auto scrollbar-hide">
-              <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center">
-                  <i class="fa fa-chevron-up text-gray-400 mr-2"></i>
-                  <span class="text-sm text-gray-400">全部文件</span>
-                </div>
-                <div class="text-xs text-gray-500">12个项目</div>
-              </div>
-              
-              <!-- 文件列表 -->
-              <div class="space-y-2">
-                <div class="file-item p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer flex items-center" data-path="/video1.mp4" data-type="video">
-                  <i class="fa fa-file-video-o text-primary mr-3 text-xl"></i>
-                  <div class="flex-1">
-                    <p class="font-medium">会议记录.mp4</p>
-                    <p class="text-xs text-gray-500">25.4 MB · 2023-05-15</p>
-                  </div>
-                </div>
-                
-                <div class="file-item p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer flex items-center" data-path="/video2.mp4" data-type="video">
-                  <i class="fa fa-file-video-o text-primary mr-3 text-xl"></i>
-                  <div class="flex-1">
-                    <p class="font-medium">产品介绍.mp4</p>
-                    <p class="text-xs text-gray-500">42.8 MB · 2023-05-20</p>
-                  </div>
-                </div>
-                
-                <div class="file-item p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer flex items-center" data-path="/video3.mp4" data-type="video">
-                  <i class="fa fa-file-video-o text-primary mr-3 text-xl"></i>
-                  <div class="flex-1">
-                    <p class="font-medium">教程视频.mp4</p>
-                    <p class="text-xs text-gray-500">108.5 MB · 2023-06-02</p>
-                  </div>
-                </div>
-                
-                <div class="file-item p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer flex items-center" data-path="/video4.mp4" data-type="video">
-                  <i class="fa fa-file-video-o text-primary mr-3 text-xl"></i>
-                  <div class="flex-1">
-                    <p class="font-medium">演讲记录.mp4</p>
-                    <p class="text-xs text-gray-500">76.2 MB · 2023-06-15</p>
-                  </div>
-                </div>
-                
-                <div class="file-item p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer flex items-center" data-path="/video5.mp4" data-type="video">
-                  <i class="fa fa-file-video-o text-primary mr-3 text-xl"></i>
-                  <div class="flex-1">
-                    <p class="font-medium">访谈视频.mp4</p>
-                    <p class="text-xs text-gray-500">92.7 MB · 2023-06-20</p>
-                  </div>
-                </div>
-                
-                <div class="file-item p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer flex items-center" data-path="/document.pdf" data-type="document">
-                  <i class="fa fa-file-pdf-o text-red-500 mr-3 text-xl"></i>
-                  <div class="flex-1">
-                    <p class="font-medium">项目文档.pdf</p>
-                    <p class="text-xs text-gray-500">12.3 MB · 2023-05-10</p>
-                  </div>
-                </div>
-                
-                <div class="file-item p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer flex items-center" data-path="/presentation.pptx" data-type="document">
-                  <i class="fa fa-file-powerpoint-o text-orange-500 mr-3 text-xl"></i>
-                  <div class="flex-1">
-                    <p class="font-medium">演示文稿.pptx</p>
-                    <p class="text-xs text-gray-500">18.7 MB · 2023-05-25</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="p-4 border-t border-gray-800">
-              <div class="flex items-center justify-between text-sm text-gray-400">
-                <div>
-                  <span class="font-medium">已用空间:</span> 2.5 GB / 2 TB
-                </div>
-                <div class="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
-                  <div class="h-full bg-primary" style="width: 0.1%"></div>
-                </div>
-              </div>
-            </div>
+        <!-- 投票状态提示 -->
+        <div id="vote-status" class="mb-8 bg-neutral rounded-xl p-4 flex items-center justify-between">
+          <div class="flex items-center">
+            <i class="fa fa-info-circle text-primary mr-2"></i>
+            <span id="vote-status-text">您今天还没有投票</span>
           </div>
-          
-          <!-- 视频播放器和字幕 -->
-          <div class="lg:col-span-2 bg-gray-900 rounded-xl overflow-hidden shadow-2xl">
-            <div class="relative aspect-video bg-black">
-              <video id="video-player" class="w-full h-full object-contain" controls>
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-businesswoman-presenting-a-report-4240-large.mp4" type="video/mp4">
-                您的浏览器不支持视频播放。
-              </video>
-              
-              <!-- 字幕显示区域 -->
-              <div id="subtitle-display" class="absolute bottom-0 left-0 right-0 p-4 bg-black/60 backdrop-blur text-white text-center">
-                <p id="current-subtitle" class="text-xl font-medium text-shadow-lg">请从左侧选择一个视频文件</p>
-              </div>
-              
-              <!-- 语音活动指示器 -->
-              <div class="absolute top-4 right-4 bg-black/60 backdrop-blur rounded-full p-2 flex items-center">
-                <div id="voice-indicator" class="w-3 h-3 rounded-full bg-gray-500 mr-2"></div>
-                <span id="voice-status" class="text-sm">未检测到语音</span>
-              </div>
-            </div>
-            
-            <!-- 字幕历史记录 -->
-            <div class="p-4 max-h-60 overflow-y-auto scrollbar-hide">
-              <h3 class="text-lg font-semibold mb-2 flex items-center">
-                <i class="fa fa-history text-primary mr-2"></i> 字幕历史
-              </h3>
-              <div id="subtitle-history" class="space-y-2 text-sm text-gray-300">
-                <p class="opacity-80">选择视频并点击"生成字幕"开始</p>
-              </div>
-            </div>
+          <div id="vote-reset-timer" class="text-sm text-gray-400">
+            投票将于 <span id="reset-time">23:59</span> 重置
           </div>
         </div>
         
-        <!-- 控制面板 -->
-        <div class="mt-8 bg-gray-900 rounded-xl p-6 shadow-xl">
-          <div class="flex flex-col md:flex-row gap-4">
-            <div class="flex-1">
-              <h3 class="text-lg font-semibold mb-4 flex items-center">
-                <i class="fa fa-sliders text-primary mr-2"></i> 字幕控制
-              </h3>
-              
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- 语言选择 -->
-                <div>
-                  <label class="block text-sm font-medium text-gray-400 mb-2">识别语言</label>
-                  <select id="language-select" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-primary focus:border-primary">
-                    <option value="zh-CN">中文 (简体)</option>
-                    <option value="en-US">英语 (美国)</option>
-                    <option value="ja-JP">日语</option>
-                    <option value="ko-KR">韩语</option>
-                    <option value="es-ES">西班牙语</option>
-                    <option value="fr-FR">法语</option>
-                    <option value="de-DE">德语</option>
-                  </select>
-                </div>
-                
-                <!-- 字幕样式 -->
-                <div>
-                  <label class="block text-sm font-medium text-gray-400 mb-2">字幕样式</label>
-                  <div class="grid grid-cols-2 gap-3">
-                    <div>
-                      <label class="block text-xs text-gray-500 mb-1">字体大小</label>
-                      <input type="range" id="font-size" min="12" max="36" value="18" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
-                      <div class="flex justify-between text-xs text-gray-500 mt-1">
-                        <span>小</span>
-                        <span>大</span>
-                      </div>
-                    </div>
-                    <div>
-                      <label class="block text-xs text-gray-500 mb-1">不透明度</label>
-                      <input type="range" id="opacity" min="50" max="100" value="90" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
-                      <div class="flex justify-between text-xs text-gray-500 mt-1">
-                        <span>透明</span>
-                        <span>不透明</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="flex-1">
-              <h3 class="text-lg font-semibold mb-4 flex items-center">
-                <i class="fa fa-cog text-primary mr-2"></i> 生成设置
-              </h3>
-              
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- 识别精度 -->
-                <div>
-                  <label class="block text-sm font-medium text-gray-400 mb-2">识别精度</label>
-                  <div class="flex items-center">
-                    <input type="range" id="accuracy" min="0" max="2" value="1" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary">
-                    <span class="ml-3 text-sm text-gray-400" id="accuracy-value">平衡</span>
-                  </div>
-                  <div class="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>速度优先</span>
-                    <span>精度优先</span>
-                  </div>
-                </div>
-                
-                <!-- 字幕保存位置 -->
-                <div>
-                  <label class="block text-sm font-medium text-gray-400 mb-2">保存位置</label>
-                  <div class="relative">
-                    <input type="text" id="save-location" value="/字幕文件/" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 pr-10 text-white focus:ring-2 focus:ring-primary focus:border-primary">
-                    <button class="absolute right-3 top-3 text-gray-400 hover:text-white">
-                      <i class="fa fa-folder-open"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
+        <!-- 候选人网格 -->
+        <div id="candidates-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <!-- 候选人卡片将通过JavaScript动态生成 -->
+        </div>
+      </div>
+    </section>
+    
+    <!-- 排名区域 -->
+    <section id="ranking" class="py-16 bg-neutral">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">当前排名</h2>
+          <p class="text-gray-400 max-w-2xl mx-auto">查看候选人的实时投票排名</p>
+        </div>
+        
+        <!-- 排名列表 -->
+        <div id="ranking-list" class="bg-base-100 rounded-xl overflow-hidden shadow-xl max-w-4xl mx-auto">
+          <div class="p-4 border-b border-gray-800 flex items-center justify-between">
+            <h3 class="font-semibold flex items-center">
+              <i class="fa fa-trophy text-primary mr-2"></i> 候选人排名
+            </h3>
+            <div class="flex items-center space-x-2">
+              <span class="text-sm text-gray-400">排序方式:</span>
+              <select id="sort-select" class="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+                <option value="votes-desc">票数从高到低</option>
+                <option value="votes-asc">票数从低到高</option>
+                <option value="name-asc">姓名从A到Z</option>
+                <option value="name-desc">姓名从Z到A</option>
+              </select>
             </div>
           </div>
           
-          <div class="mt-6 flex flex-wrap gap-3">
-            <button id="generate-subtitles" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
-              <i class="fa fa-magic mr-2"></i> 生成字幕
-            </button>
-            <button id="save-to-pan" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center opacity-50 cursor-not-allowed">
-              <i class="fa fa-cloud-upload mr-2"></i> 保存到网盘
-            </button>
-            <button id="download-srt" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center opacity-50 cursor-not-allowed">
-              <i class="fa fa-download mr-2"></i> 下载SRT
-            </button>
-            <button id="cancel-generation" class="bg-error hover:bg-error/90 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center opacity-50 cursor-not-allowed">
-              <i class="fa fa-stop mr-2"></i> 取消
-            </button>
+          <div class="p-4">
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="text-left text-gray-400">
+                    <th class="pb-3 font-medium">排名</th>
+                    <th class="pb-3 font-medium">候选人</th>
+                    <th class="pb-3 font-medium">票数</th>
+                    <th class="pb-3 font-medium">角色</th>
+                    <th class="pb-3 font-medium">趋势</th>
+                  </tr>
+                </thead>
+                <tbody id="ranking-body">
+                  <!-- 排名数据将通过JavaScript动态生成 -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </section>
     
-    <!-- 功能特点 -->
-    <section id="features" class="py-20 bg-gray-900">
+    <!-- 统计区域 -->
+    <section id="stats" class="py-16 bg-base-100">
       <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">强大功能</h2>
-          <p class="text-gray-400 max-w-2xl mx-auto">我们的百度网盘字幕生成器拥有一系列强大功能，满足您的各种需求</p>
+        <div class="text-center mb-12">
+          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">投票统计</h2>
+          <p class="text-gray-400 max-w-2xl mx-auto">查看候选人的投票分布情况</p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <!-- 功能卡片 1 -->
-          <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-700">
-            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
-              <i class="fa fa-cloud text-primary text-xl"></i>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <!-- 候选人投票分布 -->
+          <div class="bg-neutral rounded-xl p-6 shadow-lg">
+            <h3 class="text-lg font-semibold mb-4 flex items-center">
+              <i class="fa fa-pie-chart text-primary mr-2"></i> 候选人得票分布
+            </h3>
+            <div class="h-80">
+              <canvas id="candidates-stats-chart"></canvas>
             </div>
-            <h3 class="text-xl font-semibold mb-3">网盘直接处理</h3>
-            <p class="text-gray-400">无需下载视频，直接在网盘中处理，节省您的带宽和存储空间。</p>
           </div>
           
-          <!-- 功能卡片 2 -->
-          <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-700">
-            <div class="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
-              <i class="fa fa-bolt text-accent text-xl"></i>
+          <!-- 总投票数 -->
+          <div class="bg-neutral rounded-xl p-6 shadow-lg">
+            <h3 class="text-lg font-semibold mb-4 flex items-center">
+              <i class="fa fa-bar-chart text-primary mr-2"></i> 投票数据
+            </h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-base-100 rounded-lg p-4">
+                <div class="text-sm text-gray-400 mb-1">总投票数</div>
+                <div class="text-3xl font-bold text-white" id="total-votes">0</div>
+                <div class="text-xs text-success mt-1">
+                  <i class="fa fa-arrow-up"></i> 较昨日 +12.5%
+                </div>
+              </div>
+              
+              <div class="bg-base-100 rounded-lg p-4">
+                <div class="text-sm text-gray-400 mb-1">今日投票</div>
+                <div class="text-3xl font-bold text-white" id="today-votes">0</div>
+                <div class="text-xs text-success mt-1">
+                  <i class="fa fa-arrow-up"></i> 较昨日 +8.3%
+                </div>
+              </div>
+              
+              <div class="bg-base-100 rounded-lg p-4">
+                <div class="text-sm text-gray-400 mb-1">参与用户</div>
+                <div class="text-3xl font-bold text-white" id="active-users">0</div>
+                <div class="text-xs text-success mt-1">
+                  <i class="fa fa-arrow-up"></i> 较昨日 +5.2%
+                </div>
+              </div>
+              
+              <div class="bg-base-100 rounded-lg p-4">
+                <div class="text-sm text-gray-400 mb-1">投票率</div>
+                <div class="text-3xl font-bold text-white" id="vote-rate">0%</div>
+                <div class="text-xs text-success mt-1">
+                  <i class="fa fa-arrow-up"></i> 较昨日 +2.1%
+                </div>
+              </div>
             </div>
-            <h3 class="text-xl font-semibold mb-3">AI 语音识别</h3>
-            <p class="text-gray-400">利用先进的AI技术，快速准确地将视频中的语音转换为文字。</p>
-          </div>
-          
-          <!-- 功能卡片 3 -->
-          <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-700">
-            <div class="w-12 h-12 bg-success/20 rounded-lg flex items-center justify-center mb-4">
-              <i class="fa fa-language text-success text-xl"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-3">多语言支持</h3>
-            <p class="text-gray-400">支持多种语言的语音识别，包括中文、英语、日语、韩语等。</p>
-          </div>
-          
-          <!-- 功能卡片 4 -->
-          <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-700">
-            <div class="w-12 h-12 bg-info/20 rounded-lg flex items-center justify-center mb-4">
-              <i class="fa fa-paint-brush text-info text-xl"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-3">自定义样式</h3>
-            <p class="text-gray-400">灵活调整字幕的字体、颜色、大小和位置，使其与您的视频风格完美匹配。</p>
-          </div>
-          
-          <!-- 功能卡片 5 -->
-          <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-700">
-            <div class="w-12 h-12 bg-warning/20 rounded-lg flex items-center justify-center mb-4">
-              <i class="fa fa-save text-warning text-xl"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-3">自动保存</h3>
-            <p class="text-gray-400">字幕生成后自动保存到您指定的网盘位置，方便后续使用。</p>
-          </div>
-          
-          <!-- 功能卡片 6 -->
-          <div class="bg-gray-800/50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-700">
-            <div class="w-12 h-12 bg-error/20 rounded-lg flex items-center justify-center mb-4">
-              <i class="fa fa-lock text-error text-xl"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-3">隐私保护</h3>
-            <p class="text-gray-400">所有视频和音频数据仅在本地处理，不会上传到第三方服务器，确保隐私安全。</p>
           </div>
         </div>
       </div>
     </section>
     
-    <!-- 使用统计 -->
-    <section class="py-20 bg-gray-800">
+    <!-- 关于区域 -->
+    <section id="about" class="py-16 bg-neutral">
       <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">用户使用统计</h2>
-          <p class="text-gray-400 max-w-2xl mx-auto">我们的字幕生成器已帮助数千名用户创建了高质量的视频字幕</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="bg-gray-900 rounded-xl p-6 shadow-lg border border-gray-700">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-300">总生成字幕</h3>
-              <div class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
-                <i class="fa fa-file-text-o text-primary"></i>
-              </div>
-            </div>
-            <p class="text-3xl font-bold text-white">58,300+</p>
-            <p class="text-sm text-gray-500 mt-1">自2023年上线以来</p>
-          </div>
-          
-          <div class="bg-gray-900 rounded-xl p-6 shadow-lg border border-gray-700">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-300">活跃用户</h3>
-              <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
-                <i class="fa fa-users text-accent"></i>
-              </div>
-            </div>
-            <p class="text-3xl font-bold text-white">4,200+</p>
-            <p class="text-sm text-gray-500 mt-1">每月活跃用户</p>
-          </div>
-          
-          <div class="bg-gray-900 rounded-xl p-6 shadow-lg border border-gray-700">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-300">识别准确率</h3>
-              <div class="w-10 h-10 bg-success/20 rounded-full flex items-center justify-center">
-                <i class="fa fa-check-circle text-success"></i>
-              </div>
-            </div>
-            <p class="text-3xl font-bold text-white">97.2%</p>
-            <p class="text-sm text-gray-500 mt-1">平均识别准确率</p>
-          </div>
-          
-          <div class="bg-gray-900 rounded-xl p-6 shadow-lg border border-gray-700">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-300">处理速度</h3>
-              <div class="w-10 h-10 bg-info/20 rounded-full flex items-center justify-center">
-                <i class="fa fa-clock-o text-info"></i>
-              </div>
-            </div>
-            <p class="text-3xl font-bold text-white">2x</p>
-            <p class="text-sm text-gray-500 mt-1">实时速度的2倍</p>
-          </div>
-        </div>
-        
-        <div class="mt-12 bg-gray-900 rounded-xl p-6 shadow-lg border border-gray-700">
-          <h3 class="text-xl font-semibold mb-6 flex items-center">
-            <i class="fa fa-bar-chart text-primary mr-2"></i> 月度使用趋势
-          </h3>
-          <div class="h-80">
-            <canvas id="usageChart"></canvas>
-          </div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- 常见问题 -->
-    <section id="about" class="py-20 bg-gray-900">
-      <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">常见问题</h2>
-          <p class="text-gray-400 max-w-2xl mx-auto">了解更多关于我们的百度网盘字幕生成器的信息</p>
+        <div class="text-center mb-12">
+          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">关于系统</h2>
+          <p class="text-gray-400 max-w-2xl mx-auto">了解更多关于皇帝选举投票排名系统的信息</p>
         </div>
         
         <div class="max-w-3xl mx-auto">
-          <div class="space-y-4">
-            <!-- FAQ 项目 1 -->
-            <div class="bg-gray-800/50 rounded-xl overflow-hidden">
-              <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center">
-                <span class="font-medium">需要下载百度网盘客户端吗？</span>
-                <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
-              </button>
-              <div class="faq-content px-6 pb-4 hidden">
-                <p class="text-gray-400">不需要，我们的工具直接与百度网盘网页API集成，您只需在网页上登录您的百度账号即可使用，无需下载安装任何客户端。</p>
-              </div>
-            </div>
-            
-            <!-- FAQ 项目 2 -->
-            <div class="bg-gray-800/50 rounded-xl overflow-hidden">
-              <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center">
-                <span class="font-medium">支持多大的视频文件？</span>
-                <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
-              </button>
-              <div class="faq-content px-6 pb-4 hidden">
-                <p class="text-gray-400">我们的工具支持百度网盘内的任意大小视频文件。不过，较大的视频文件可能需要更长的处理时间。对于超过1GB的视频，建议在网络稳定的环境下使用。</p>
-              </div>
-            </div>
-            
-            <!-- FAQ 项目 3 -->
-            <div class="bg-gray-800/50 rounded-xl overflow-hidden">
-              <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center">
-                <span class="font-medium">字幕生成需要多长时间？</span>
-                <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
-              </button>
-              <div class="faq-content px-6 pb-4 hidden">
-                <p class="text-gray-400">字幕生成时间取决于视频长度和复杂程度。一般来说，我们的系统处理速度是视频实际播放时间的2倍左右。例如，一个10分钟的视频大约需要5分钟生成字幕。</p>
-              </div>
-            </div>
-            
-            <!-- FAQ 项目 4 -->
-            <div class="bg-gray-800/50 rounded-xl overflow-hidden">
-              <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center">
-                <span class="font-medium">字幕会保存在哪里？</span>
-                <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
-              </button>
-              <div class="faq-content px-6 pb-4 hidden">
-                <p class="text-gray-400">生成的字幕文件会自动保存到您指定的百度网盘目录中，默认保存在"字幕文件"文件夹下。您也可以在设置中自定义保存位置。</p>
-              </div>
-            </div>
-            
-            <!-- FAQ 项目 5 -->
-            <div class="bg-gray-800/50 rounded-xl overflow-hidden">
-              <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center">
-                <span class="font-medium">如何提高识别准确率？</span>
-                <i class="fa fa-chevron-down text-gray-400 transition-transform"></i>
-              </button>
-              <div class="faq-content px-6 pb-4 hidden">
-                <p class="text-gray-400">为了获得最佳识别效果，建议使用清晰的视频和音频。嘈杂的背景音可能会影响识别准确率。您也可以在设置中调整"识别精度"参数，选择"精度优先"模式以获得更高的准确率。</p>
-              </div>
-            </div>
+          <div class="bg-base-100 rounded-xl p-6 shadow-lg mb-8">
+            <h3 class="text-xl font-semibold mb-4">系统说明</h3>
+            <p class="text-gray-300 mb-4">
+              皇帝选举投票排名系统是一个用于选举皇帝、小皇弟和皇弟的平台。用户每天可以投一票给任意候选人，系统会实时更新排名并展示结果。
+            </p>
+            <p class="text-gray-300">
+              选举结束后，得票最多的候选人将被封为皇帝，第二名被封为小皇弟，第三名被封为皇弟。
+            </p>
           </div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- 行动召唤 -->
-    <section class="py-20 bg-gradient-to-r from-primary/20 to-accent/20 relative overflow-hidden">
-      <div class="absolute inset-0 z-0">
-        <div class="absolute inset-0 bg-gray-900/80"></div>
-        <img src="https://picsum.photos/seed/calltoaction/1920/1080" alt="背景" class="w-full h-full object-cover opacity-30">
-      </div>
-      
-      <div class="container mx-auto px-4 relative z-10">
-        <div class="max-w-3xl mx-auto text-center">
-          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-6">立即开始为您的网盘视频添加字幕</h2>
-          <p class="text-xl text-gray-300 mb-8">加入数千名内容创作者的行列，利用我们的百度网盘字幕生成器提升视频质量和可访问性。</p>
-          <div class="flex flex-col sm:flex-row justify-center gap-4">
-            <button id="cta-login-button" class="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
-              <i class="fa fa-cloud mr-2"></i> 登录百度网盘
-            </button>
-            <button class="bg-transparent hover:bg-white/10 text-white border border-white/30 px-8 py-4 rounded-lg transition-all flex items-center justify-center">
-              <i class="fa fa-book mr-2"></i> 查看使用教程
-            </button>
+          
+          <div class="bg-base-100 rounded-xl p-6 shadow-lg">
+            <h3 class="text-xl font-semibold mb-4">使用规则</h3>
+            <ul class="space-y-3 text-gray-300">
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-success mt-1 mr-2"></i>
+                <span>每位用户每天只能投一票</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-success mt-1 mr-2"></i>
+                <span>投票时间为每天00:00至23:59</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-success mt-1 mr-2"></i>
+                <span>投票后可以在排名页面查看实时结果</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-success mt-1 mr-2"></i>
+                <span>系统会记录投票历史和排名变化</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-success mt-1 mr-2"></i>
+                <span>禁止使用任何自动化工具或作弊行为</span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -615,16 +351,16 @@
   </main>
 
   <!-- 页脚 -->
-  <footer class="bg-gray-900 border-t border-gray-800">
+  <footer class="bg-neutral border-t border-gray-800">
     <div class="container mx-auto px-4 py-12">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- 公司信息 -->
+        <!-- 系统信息 -->
         <div>
           <div class="flex items-center space-x-2 mb-4">
-            <i class="fa fa-cloud text-primary text-2xl"></i>
-            <h2 class="text-xl font-bold pan-gradient bg-clip-text text-transparent">网盘字幕助手</h2>
+            <i class="fa fa-crown text-primary text-2xl"></i>
+            <h2 class="text-xl font-bold">皇帝选举投票系统</h2>
           </div>
-          <p class="text-gray-400 mb-4">百度网盘视频字幕自动生成工具，让您的视频内容更加无障碍。</p>
+          <p class="text-gray-400 mb-4">为您喜爱的候选人投票，实时查看排名变化。</p>
           <div class="flex space-x-4">
             <a href="#" class="text-gray-400 hover:text-primary transition-colors">
               <i class="fa fa-twitter"></i>
@@ -645,11 +381,11 @@
         <div>
           <h3 class="text-lg font-semibold mb-4">快速链接</h3>
           <ul class="space-y-2">
-            <li><a href="#features" class="text-gray-400 hover:text-primary transition-colors">功能</a></li>
-            <li><a href="#demo" class="text-gray-400 hover:text-primary transition-colors">演示</a></li>
-            <li><a href="#settings" class="text-gray-400 hover:text-primary transition-colors">设置</a></li>
+            <li><a href="#voting" class="text-gray-400 hover:text-primary transition-colors">投票</a></li>
+            <li><a href="#ranking" class="text-gray-400 hover:text-primary transition-colors">排名</a></li>
+            <li><a href="#stats" class="text-gray-400 hover:text-primary transition-colors">统计</a></li>
             <li><a href="#about" class="text-gray-400 hover:text-primary transition-colors">关于</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">API文档</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">帮助中心</a></li>
           </ul>
         </div>
         
@@ -657,20 +393,20 @@
         <div>
           <h3 class="text-lg font-semibold mb-4">支持</h3>
           <ul class="space-y-2">
-            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">帮助中心</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">使用教程</a></li>
             <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">常见问题</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">使用教程</a></li>
             <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">联系我们</a></li>
             <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">隐私政策</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">服务条款</a></li>
           </ul>
         </div>
         
         <!-- 订阅 -->
         <div>
           <h3 class="text-lg font-semibold mb-4">订阅更新</h3>
-          <p class="text-gray-400 mb-4">获取最新功能和更新的通知</p>
+          <p class="text-gray-400 mb-4">获取系统更新和活动通知</p>
           <form class="flex">
-            <input type="email" placeholder="您的邮箱地址" class="flex-1 bg-gray-800 border border-gray-700 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+            <input type="email" placeholder="您的邮箱地址" class="flex-1 bg-base-100 border border-gray-700 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
             <button type="submit" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-r-lg transition-colors">
               <i class="fa fa-paper-plane"></i>
             </button>
@@ -679,7 +415,7 @@
       </div>
       
       <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-        <p class="text-gray-500 text-sm">© 2025 网盘字幕助手. 保留所有权利。</p>
+        <p class="text-gray-500 text-sm">© 2025 皇帝选举投票系统. 保留所有权利。</p>
         <div class="flex space-x-6 mt-4 md:mt-0">
           <a href="#" class="text-gray-500 hover:text-primary text-sm transition-colors">隐私政策</a>
           <a href="#" class="text-gray-500 hover:text-primary text-sm transition-colors">服务条款</a>
@@ -693,19 +429,515 @@
   <script>
     // 页面加载完成后执行
     document.addEventListener('DOMContentLoaded', function() {
-      // 导航栏滚动效果
-      const navbar = document.getElementById('navbar');
-      window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-          navbar.classList.add('py-2', 'shadow-lg');
-          navbar.classList.remove('py-3');
-        } else {
-          navbar.classList.add('py-3');
-          navbar.classList.remove('py-2', 'shadow-lg');
+      // 初始化数据
+      let candidatesData = [];
+      let userVote = null;
+      let userVoteTime = null;
+      
+      // 初始化候选人数据
+      function initCandidatesData() {
+        candidatesData = [
+          {
+            id: 1,
+            name: "许宇飞",
+            votes: 150, // 预设皇帝
+            role: "皇帝",
+            prevRank: null,
+            currentRank: null,
+            avatar: "https://picsum.photos/seed/xuyufei/200/200",
+            crown: "👑"
+          },
+          {
+            id: 2,
+            name: "赵博洋",
+            votes: 120, // 预设小皇弟
+            role: "小皇弟",
+            prevRank: null,
+            currentRank: null,
+            avatar: "https://picsum.photos/seed/zhaoboyang/200/200",
+            crown: "👑"
+          },
+          {
+            id: 3,
+            name: "金胜利",
+            votes: 90, // 预设皇弟
+            role: "皇弟",
+            prevRank: null,
+            currentRank: null,
+            avatar: "https://picsum.photos/seed/jinshengli/200/200",
+            crown: "👑"
+          }
+        ];
+        
+        // 计算初始排名
+        updateRanking();
+      }
+      
+      // 更新排名
+      function updateRanking() {
+        // 按票数降序排序
+        candidatesData.sort((a, b) => b.votes - a.votes);
+        
+        // 分配排名
+        candidatesData.forEach((candidate, index) => {
+          candidate.prevRank = candidate.currentRank;
+          candidate.currentRank = index + 1;
+          
+          // 根据排名更新角色
+          if (index === 0) {
+            candidate.role = "皇帝";
+            candidate.crown = "👑";
+          } else if (index === 1) {
+            candidate.role = "小皇弟";
+            candidate.crown = "👑";
+          } else if (index === 2) {
+            candidate.role = "皇弟";
+            candidate.crown = "👑";
+          }
+        });
+      }
+      
+      // 渲染候选人卡片
+      function renderCandidatesGrid() {
+        const candidatesGrid = document.getElementById('candidates-grid');
+        candidatesGrid.innerHTML = '';
+        
+        candidatesData.forEach(candidate => {
+          const candidateCard = document.createElement('div');
+          candidateCard.className = 'voting-card bg-neutral rounded-xl overflow-hidden hover:shadow-lg cursor-pointer';
+          
+          // 检查用户是否已经投过票
+          const hasVoted = userVote === candidate.id;
+          
+          // 确定卡片样式
+          if (hasVoted) {
+            candidateCard.classList.add('border-2', 'border-primary', 'bg-primary/10');
+          }
+          
+          // 添加头像区域
+          const avatarContainer = document.createElement('div');
+          avatarContainer.className = 'relative h-48';
+          
+          const avatarImg = document.createElement('img');
+          avatarImg.src = candidate.avatar;
+          avatarImg.alt = candidate.name;
+          avatarImg.className = 'w-full h-full object-cover';
+          
+          const roleBadge = document.createElement('div');
+          roleBadge.className = `absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium ${
+            candidate.role === "皇帝" ? "bg-yellow-500 text-white" : 
+            candidate.role === "小皇弟" ? "bg-purple-500 text-white" : "bg-blue-500 text-white"
+          }`;
+          roleBadge.textContent = candidate.role;
+          
+          avatarContainer.appendChild(avatarImg);
+          avatarContainer.appendChild(roleBadge);
+          
+          // 添加候选人信息
+          const infoContainer = document.createElement('div');
+          infoContainer.className = 'p-5';
+          
+          const nameRow = document.createElement('div');
+          nameRow.className = 'flex items-center justify-between mb-2';
+          
+          const name = document.createElement('h3');
+          name.className = 'text-xl font-bold';
+          name.innerHTML = `${candidate.name} ${candidate.crown}`;
+          
+          const rankBadge = document.createElement('div');
+          rankBadge.className = `px-2 py-1 rounded-full text-xs font-medium ${
+            candidate.currentRank === 1 ? "bg-yellow-500 text-white" : 
+            candidate.currentRank === 2 ? "bg-gray-500 text-white" : "bg-gray-700 text-gray-300"
+          }`;
+          rankBadge.textContent = `第 ${candidate.currentRank} 名`;
+          
+          nameRow.appendChild(name);
+          nameRow.appendChild(rankBadge);
+          
+          const votesCount = document.createElement('div');
+          votesCount.className = 'text-sm text-gray-400 mb-4';
+          votesCount.textContent = `${candidate.votes} 票`;
+          
+          // 添加投票按钮
+          const voteButton = document.createElement('button');
+          voteButton.className = `vote-button w-full py-2 rounded-lg transition-all ${hasVoted ? 'bg-primary text-white' : 'bg-gray-800 hover:bg-gray-700 text-gray-300'}`;
+          voteButton.textContent = hasVoted ? '已投票' : '投票';
+          voteButton.disabled = userVote !== null && userVote !== candidate.id;
+          
+          // 添加投票事件
+          voteButton.addEventListener('click', () => {
+            if (!voteButton.disabled) {
+              handleVote(candidate.id);
+            }
+          });
+          
+          // 组装卡片
+          infoContainer.appendChild(nameRow);
+          infoContainer.appendChild(votesCount);
+          infoContainer.appendChild(voteButton);
+          
+          candidateCard.appendChild(avatarContainer);
+          candidateCard.appendChild(infoContainer);
+          
+          // 添加到网格
+          candidatesGrid.appendChild(candidateCard);
+        });
+      }
+      
+      // 处理投票
+      function handleVote(candidateId) {
+        // 如果用户今天已经投票，并且尝试投给不同的候选人
+        if (userVote !== null && userVote !== candidateId && !isVoteExpired()) {
+          alert('您今天已经投过票了，每天只能投一票');
+          return;
         }
+        
+        // 更新投票状态
+        userVote = candidateId;
+        userVoteTime = new Date().toISOString();
+        
+        // 更新候选人票数
+        const candidate = candidatesData.find(c => c.id === candidateId);
+        if (candidate) {
+          candidate.votes += 1;
+        }
+        
+        // 更新排名
+        updateRanking();
+        
+        // 更新UI
+        updateVoteStatus();
+        renderCandidatesGrid();
+        renderRankingList();
+        updateStats();
+        
+        // 添加投票动画效果
+        const votedCard = document.querySelector(`.voting-card:has(.vote-button:contains('已投票'))`);
+        if (votedCard) {
+          votedCard.classList.add('vote-animation');
+          setTimeout(() => {
+            votedCard.classList.remove('vote-animation');
+          }, 500);
+        }
+        
+        // 保存到本地存储
+        saveVoteData();
+      }
+      
+      // 检查投票是否过期
+      function isVoteExpired() {
+        if (!userVoteTime) return true;
+        
+        const voteDate = new Date(userVoteTime);
+        const today = new Date();
+        
+        // 检查是否是同一天
+        return voteDate.getDate() !== today.getDate() ||
+               voteDate.getMonth() !== today.getMonth() ||
+               voteDate.getFullYear() !== today.getFullYear();
+      }
+      
+      // 更新投票状态
+      function updateVoteStatus() {
+        const voteStatusText = document.getElementById('vote-status-text');
+        const voteResetTime = document.getElementById('reset-time');
+        
+        // 计算重置时间
+        const now = new Date();
+        const resetTime = new Date(now);
+        resetTime.setHours(23, 59, 59, 0);
+        
+        const hours = resetTime.getHours().toString().padStart(2, '0');
+        const minutes = resetTime.getMinutes().toString().padStart(2, '0');
+        
+        voteResetTime.textContent = `${hours}:${minutes}`;
+        
+        // 更新投票状态
+        if (userVote && !isVoteExpired()) {
+          const candidate = candidatesData.find(c => c.id === userVote);
+          voteStatusText.innerHTML = `您今天已投票给 <span class="text-primary font-medium">${candidate ? candidate.name : userVote}</span> (${candidate ? candidate.role : '未知角色'})`;
+        } else {
+          voteStatusText.textContent = '您今天还没有投票';
+        }
+      }
+      
+      // 渲染排名列表
+      function renderRankingList() {
+        const rankingBody = document.getElementById('ranking-body');
+        rankingBody.innerHTML = '';
+        
+        // 根据排序选项排序
+        const sortSelect = document.getElementById('sort-select');
+        const sortValue = sortSelect.value;
+        
+        let sortedCandidates = [...candidatesData];
+        
+        switch (sortValue) {
+          case 'votes-desc':
+            sortedCandidates.sort((a, b) => b.votes - a.votes);
+            break;
+          case 'votes-asc':
+            sortedCandidates.sort((a, b) => a.votes - b.votes);
+            break;
+          case 'name-asc':
+            sortedCandidates.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+          case 'name-desc':
+            sortedCandidates.sort((a, b) => b.name.localeCompare(a.name));
+            break;
+        }
+        
+        // 更新显示排名
+        sortedCandidates.forEach((candidate, index) => {
+          candidate.displayRank = index + 1;
+        });
+        
+        // 渲染列表
+        sortedCandidates.forEach(candidate => {
+          const row = document.createElement('tr');
+          row.className = 'border-b border-gray-800 hover:bg-gray-800/50 transition-colors';
+          
+          // 排名单元格
+          const rankCell = document.createElement('td');
+          rankCell.className = 'py-3 font-medium';
+          
+          // 添加排名变化指示
+          let rankChange = '';
+          let rankClass = '';
+          
+          if (candidate.prevRank !== null && candidate.prevRank !== candidate.currentRank) {
+            const change = candidate.prevRank - candidate.currentRank;
+            
+            if (change > 0) {
+              rankChange = `<i class="fa fa-arrow-up text-success ml-1"></i>`;
+              rankClass = 'rank-up';
+            } else if (change < 0) {
+              rankChange = `<i class="fa fa-arrow-down text-error ml-1"></i>`;
+              rankClass = 'rank-down';
+            }
+          }
+          
+          rankCell.innerHTML = `<span class="${rankClass}">${candidate.displayRank}</span>${rankChange}`;
+          
+          // 候选人单元格
+          const candidateCell = document.createElement('td');
+          candidateCell.className = 'py-3 flex items-center';
+          
+          const avatarImg = document.createElement('img');
+          avatarImg.src = candidate.avatar;
+          avatarImg.alt = candidate.name;
+          avatarImg.className = 'w-10 h-10 rounded-full mr-3 object-cover';
+          
+          const nameSpan = document.createElement('span');
+          
+          // 根据角色设置不同颜色
+          if (candidate.role === "皇帝") {
+            nameSpan.className = 'font-medium text-yellow-400';
+          } else if (candidate.role === "小皇弟") {
+            nameSpan.className = 'font-medium text-purple-400';
+          } else {
+            nameSpan.className = 'font-medium text-blue-400';
+          }
+          
+          nameSpan.textContent = candidate.name;
+          
+          candidateCell.appendChild(avatarImg);
+          candidateCell.appendChild(nameSpan);
+          
+          // 票数单元格
+          const votesCell = document.createElement('td');
+          votesCell.className = 'py-3';
+          votesCell.textContent = candidate.votes;
+          
+          // 角色单元格
+          const roleCell = document.createElement('td');
+          roleCell.className = 'py-3';
+          
+          const roleBadge = document.createElement('span');
+          roleBadge.className = `px-2 py-1 rounded-full text-xs font-medium ${
+            candidate.role === "皇帝" ? "bg-yellow-500 text-white" : 
+            candidate.role === "小皇弟" ? "bg-purple-500 text-white" : "bg-blue-500 text-white"
+          }`;
+          roleBadge.textContent = candidate.role;
+          
+          roleCell.appendChild(roleBadge);
+          
+          // 趋势单元格
+          const trendCell = document.createElement('td');
+          trendCell.className = 'py-3';
+          
+          // 计算趋势
+          const trend = calculateTrend(candidate.id);
+          
+          if (trend > 0) {
+            trendCell.innerHTML = `<span class="text-success"><i class="fa fa-arrow-up"></i> ${trend}%</span>`;
+          } else if (trend < 0) {
+            trendCell.innerHTML = `<span class="text-error"><i class="fa fa-arrow-down"></i> ${Math.abs(trend)}%</span>`;
+          } else {
+            trendCell.innerHTML = `<span class="text-gray-500"><i class="fa fa-minus"></i> 持平</span>`;
+          }
+          
+          // 组装行
+          row.appendChild(rankCell);
+          row.appendChild(candidateCell);
+          row.appendChild(votesCell);
+          row.appendChild(roleCell);
+          row.appendChild(trendCell);
+          
+          // 添加到表格
+          rankingBody.appendChild(row);
+        });
+      }
+      
+      // 计算趋势（模拟数据）
+      function calculateTrend(candidateId) {
+        // 随机生成-5%到5%之间的趋势值
+        return Math.floor(Math.random() * 11) - 5;
+      }
+      
+      // 更新统计数据
+      function updateStats() {
+        // 计算总投票数
+        const totalVotes = candidatesData.reduce((sum, candidate) => sum + candidate.votes, 0);
+        document.getElementById('total-votes').textContent = totalVotes;
+        
+        // 计算今日投票数（模拟）
+        const todayVotes = Math.floor(totalVotes * 0.3);
+        document.getElementById('today-votes').textContent = todayVotes;
+        
+        // 计算参与用户数（模拟）
+        const activeUsers = Math.floor(todayVotes * 0.8);
+        document.getElementById('active-users').textContent = activeUsers;
+        
+        // 计算投票率（模拟）
+        const voteRate = Math.floor((activeUsers / 1000) * 100);
+        document.getElementById('vote-rate').textContent = `${voteRate}%`;
+        
+        // 更新候选人统计图表
+        updateCandidatesStatsChart();
+      }
+      
+      // 更新候选人统计图表
+      function updateCandidatesStatsChart() {
+        const ctx = document.getElementById('candidates-stats-chart').getContext('2d');
+        
+        // 如果图表已存在，销毁它
+        if (window.candidatesChart) {
+          window.candidatesChart.destroy();
+        }
+        
+        // 创建新图表
+        window.candidatesChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: candidatesData.map(candidate => candidate.name),
+            datasets: [{
+              label: '票数',
+              data: candidatesData.map(candidate => candidate.votes),
+              backgroundColor: [
+                'rgba(217, 119, 6, 0.7)', // 皇帝-金色
+                'rgba(139, 92, 246, 0.7)', // 小皇弟-紫色
+                'rgba(58, 191, 248, 0.7)'  // 皇弟-蓝色
+              ],
+              borderColor: [
+                'rgb(217, 119, 6)',
+                'rgb(139, 92, 246)',
+                'rgb(58, 191, 248)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  padding: 20,
+                  usePointStyle: true,
+                  pointStyle: 'circle'
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const label = context.label || '';
+                    const value = context.raw || 0;
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const percentage = Math.round((value / total) * 100);
+                    return `${label}: ${value} 票 (${percentage}%)`;
+                  }
+                }
+              }
+            },
+            cutout: '65%'
+          }
+        });
+      }
+      
+      // 保存投票数据到本地存储
+      function saveVoteData() {
+        localStorage.setItem('voteData', JSON.stringify({
+          userVote: userVote,
+          userVoteTime: userVoteTime,
+          candidatesData: candidatesData
+        }));
+      }
+      
+      // 从本地存储加载投票数据
+      function loadVoteData() {
+        const voteData = localStorage.getItem('voteData');
+        
+        if (voteData) {
+          try {
+            const parsedData = JSON.parse(voteData);
+            userVote = parsedData.userVote;
+            userVoteTime = parsedData.userVoteTime;
+            candidatesData = parsedData.candidatesData;
+            
+            // 如果投票已过期，重置用户投票
+            if (isVoteExpired()) {
+              userVote = null;
+              userVoteTime = null;
+            }
+            
+            // 更新排名
+            updateRanking();
+          } catch (e) {
+            console.error('Failed to load vote data:', e);
+            initCandidatesData();
+          }
+        } else {
+          initCandidatesData();
+        }
+      }
+      
+      // 初始化
+      loadVoteData();
+      
+      // 渲染初始UI
+      renderCandidatesGrid();
+      renderRankingList();
+      updateVoteStatus();
+      updateStats();
+      
+      // 设置排序选择事件
+      const sortSelect = document.getElementById('sort-select');
+      sortSelect.addEventListener('change', function() {
+        renderRankingList();
       });
       
-      // 移动端菜单切换
+      // 设置登录按钮事件
+      const loginButtons = document.querySelectorAll('#login-button, #mobile-login-button, #hero-vote-button');
+      loginButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          alert('登录功能将在实际部署时实现');
+        });
+      });
+      
+      // 设置移动端菜单切换
       const mobileMenuButton = document.getElementById('mobile-menu-button');
       const mobileMenu = document.getElementById('mobile-menu');
       
@@ -713,274 +945,7 @@
         mobileMenu.classList.toggle('hidden');
       });
       
-      // 文件选择功能
-      const fileItems = document.querySelectorAll('.file-item');
-      const videoPlayer = document.getElementById('video-player');
-      const currentSubtitle = document.getElementById('current-subtitle');
-      const subtitleHistory = document.getElementById('subtitle-history');
-      const generateButton = document.getElementById('generate-subtitles');
-      const saveButton = document.getElementById('save-to-pan');
-      const downloadButton = document.getElementById('download-srt');
-      const cancelButton = document.getElementById('cancel-generation');
-      const voiceIndicator = document.getElementById('voice-indicator');
-      const voiceStatus = document.getElementById('voice-status');
-      
-      let selectedVideo = null;
-      let isGenerating = false;
-      let subtitles = [];
-      let subtitleIndex = 0;
-      
-      // 选择文件
-      fileItems.forEach(item => {
-        if (item.dataset.type === 'video') {
-          item.addEventListener('click', function() {
-            // 移除之前的选中状态
-            document.querySelectorAll('.file-item').forEach(i => {
-              i.classList.remove('bg-gray-800/50');
-            });
-            
-            // 添加选中状态
-            this.classList.add('bg-gray-800/50');
-            
-            // 更新视频源
-            selectedVideo = this.dataset.path;
-            videoPlayer.src = 'https://assets.mixkit.co/videos/preview/mixkit-businesswoman-presenting-a-report-4240-large.mp4'; // 演示视频
-            videoPlayer.load();
-            
-            // 重置字幕
-            currentSubtitle.textContent = '视频已加载，请点击"生成字幕"';
-            subtitleHistory.innerHTML = '<p class="opacity-80">视频已加载，请点击"生成字幕"开始</p>';
-            
-            // 启用生成按钮
-            generateButton.classList.remove('opacity-50', 'cursor-not-allowed');
-            saveButton.classList.add('opacity-50', 'cursor-not-allowed');
-            downloadButton.classList.add('opacity-50', 'cursor-not-allowed');
-          });
-        }
-      });
-      
-      // 生成字幕
-      generateButton.addEventListener('click', function() {
-        if (!selectedVideo || isGenerating) return;
-        
-        isGenerating = true;
-        generateButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 生成中...';
-        generateButton.classList.add('opacity-70');
-        cancelButton.classList.remove('opacity-50', 'cursor-not-allowed');
-        
-        // 清空字幕历史
-        subtitleHistory.innerHTML = '<p class="opacity-80">字幕生成中...</p>';
-        currentSubtitle.textContent = '字幕生成中...';
-        
-        // 模拟字幕生成过程
-        voiceIndicator.classList.remove('bg-gray-500', 'bg-success');
-        voiceIndicator.classList.add('bg-warning');
-        voiceStatus.textContent = '处理中...';
-        
-        // 模拟生成字幕延迟
-        setTimeout(() => {
-          // 重置字幕数据
-          subtitles = [
-            { start: 0, end: 5, text: "大家好，欢迎参加本次产品介绍会。" },
-            { start: 6, end: 10, text: "今天我们将介绍我们的最新产品。" },
-            { start: 11, end: 15, text: "这款产品集成了多项创新技术。" },
-            { start: 16, end: 20, text: "将为您带来前所未有的体验。" },
-            { start: 21, end: 25, text: "首先，让我们看看它的外观设计。" },
-            { start: 26, end: 30, text: "采用了极简主义风格，非常美观。" },
-            { start: 31, end: 35, text: "同时也考虑了实用性和舒适性。" },
-            { start: 36, end: 40, text: "接下来，我们将介绍它的核心功能。" },
-            { start: 41, end: 45, text: "这项功能将彻底改变您的工作方式。" },
-            { start: 46, end: 50, text: "提高效率，节省时间，降低成本。" },
-            { start: 51, end: 55, text: "我们相信，这款产品将成为您的得力助手。" },
-            { start: 56, end: 60, text: "感谢您的聆听，现在请观看演示。" }
-          ];
-          
-          subtitleIndex = 0;
-          currentSubtitle.textContent = subtitles[0].text;
-          
-          // 更新字幕历史
-          subtitleHistory.innerHTML = '';
-          subtitles.forEach(sub => {
-            const subElement = document.createElement('p');
-            subElement.textContent = `${formatTime(sub.start)} - ${formatTime(sub.end)}: ${sub.text}`;
-            subElement.classList.add('opacity-70');
-            subtitleHistory.appendChild(subElement);
-          });
-          
-          // 启用保存和下载按钮
-          saveButton.classList.remove('opacity-50', 'cursor-not-allowed');
-          downloadButton.classList.remove('opacity-50', 'cursor-not-allowed');
-          
-          // 重置UI状态
-          isGenerating = false;
-          generateButton.innerHTML = '<i class="fa fa-magic mr-2"></i> 生成字幕';
-          generateButton.classList.remove('opacity-70');
-          cancelButton.classList.add('opacity-50', 'cursor-not-allowed');
-          
-          // 更新语音指示器
-          voiceIndicator.classList.remove('bg-warning');
-          voiceIndicator.classList.add('bg-success');
-          voiceStatus.textContent = '语音识别完成';
-          
-          // 视频播放时显示相应字幕
-          videoPlayer.addEventListener('timeupdate', updateSubtitles);
-          
-          // 如果视频已暂停，开始播放
-          if (videoPlayer.paused) {
-            videoPlayer.play();
-          }
-        }, 3000); // 3秒后完成生成
-      });
-      
-      // 取消生成
-      cancelButton.addEventListener('click', function() {
-        if (!isGenerating) return;
-        
-        isGenerating = false;
-        generateButton.innerHTML = '<i class="fa fa-magic mr-2"></i> 生成字幕';
-        generateButton.classList.remove('opacity-70');
-        cancelButton.classList.add('opacity-50', 'cursor-not-allowed');
-        
-        currentSubtitle.textContent = '字幕生成已取消';
-        voiceIndicator.classList.remove('bg-warning');
-        voiceIndicator.classList.add('bg-gray-500');
-        voiceStatus.textContent = '未检测到语音';
-      });
-      
-      // 保存到网盘
-      saveButton.addEventListener('click', function() {
-        if (!subtitles.length || isGenerating) return;
-        
-        // 模拟保存过程
-        saveButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 保存中...';
-        
-        setTimeout(() => {
-          saveButton.innerHTML = '<i class="fa fa-check mr-2"></i> 已保存';
-          saveButton.classList.add('bg-success');
-          
-          // 2秒后恢复原状
-          setTimeout(() => {
-            saveButton.innerHTML = '<i class="fa fa-cloud-upload mr-2"></i> 保存到网盘';
-            saveButton.classList.remove('bg-success');
-          }, 2000);
-        }, 1500);
-      });
-      
-      // 下载SRT
-      downloadButton.addEventListener('click', function() {
-        if (!subtitles.length || isGenerating) return;
-        
-        // 生成SRT内容
-        let srtContent = '';
-        subtitles.forEach((sub, index) => {
-          srtContent += `${index + 1}\n`;
-          srtContent += `${formatTimeSRT(sub.start)} --> ${formatTimeSRT(sub.end)}\n`;
-          srtContent += `${sub.text}\n\n`;
-        });
-        
-        // 创建下载链接
-        const blob = new Blob([srtContent], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = selectedVideo.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + '.srt';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      });
-      
-      // 更新字幕显示
-      function updateSubtitles() {
-        const currentTime = videoPlayer.currentTime;
-        
-        // 查找当前应该显示的字幕
-        for (let i = 0; i < subtitles.length; i++) {
-          if (currentTime >= subtitles[i].start && currentTime <= subtitles[i].end) {
-            if (subtitleIndex !== i) {
-              subtitleIndex = i;
-              currentSubtitle.textContent = subtitles[i].text;
-              
-              // 高亮显示当前字幕
-              const subtitleElements = subtitleHistory.querySelectorAll('p');
-              subtitleElements.forEach((el, idx) => {
-                if (idx === i) {
-                  el.classList.add('text-white', 'font-medium', 'opacity-100');
-                  el.classList.remove('opacity-70');
-                } else {
-                  el.classList.remove('text-white', 'font-medium', 'opacity-100');
-                  el.classList.add('opacity-70');
-                }
-              });
-            }
-            return;
-          }
-        }
-        
-        // 如果没有匹配的字幕
-        currentSubtitle.textContent = '';
-      }
-      
-      // 格式化时间为秒:毫秒
-      function formatTime(seconds) {
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-      }
-      
-      // 格式化为SRT时间格式
-      function formatTimeSRT(seconds) {
-        const hours = Math.floor(seconds / 3600);
-        const mins = Math.floor((seconds % 3600) / 60);
-        const secs = Math.floor(seconds % 60);
-        const ms = Math.floor((seconds - Math.floor(seconds)) * 1000);
-        return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')},${ms.toString().padStart(3, '0')}`;
-      }
-      
-      // 字幕样式控制
-      const fontSizeSlider = document.getElementById('font-size');
-      const opacitySlider = document.getElementById('opacity');
-      
-      fontSizeSlider.addEventListener('input', function() {
-        currentSubtitle.style.fontSize = `${this.value}px`;
-      });
-      
-      opacitySlider.addEventListener('input', function() {
-        document.getElementById('subtitle-display').style.opacity = this.value / 100;
-      });
-      
-      // 识别精度控制
-      const accuracySlider = document.getElementById('accuracy');
-      const accuracyValue = document.getElementById('accuracy-value');
-      
-      accuracySlider.addEventListener('input', function() {
-        switch (this.value) {
-          case '0':
-            accuracyValue.textContent = '速度优先';
-            break;
-          case '1':
-            accuracyValue.textContent = '平衡';
-            break;
-          case '2':
-            accuracyValue.textContent = '精度优先';
-            break;
-        }
-      });
-      
-      // FAQ 折叠面板
-      const faqToggles = document.querySelectorAll('.faq-toggle');
-      
-      faqToggles.forEach(toggle => {
-        toggle.addEventListener('click', function() {
-          const content = this.nextElementSibling;
-          const icon = this.querySelector('i');
-          
-          content.classList.toggle('hidden');
-          icon.classList.toggle('rotate-180');
-        });
-      });
-      
-      // 平滑滚动
+      // 设置平滑滚动
       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
           e.preventDefault();
@@ -1002,63 +967,8 @@
         });
       });
       
-      // 登录按钮点击事件
-      const loginButtons = document.querySelectorAll('#login-button, #mobile-login-button, #hero-login-button, #cta-login-button');
-      
-      loginButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          alert('百度网盘登录功能将在实际部署时实现');
-        });
-      });
-      
-      // 初始化图表
-      const ctx = document.getElementById('usageChart').getContext('2d');
-      const usageChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-          datasets: [{
-            label: '生成字幕数量',
-            data: [1200, 1900, 3000, 5000, 7000, 9500, 12000, 15000, 19000, 24000, 32000, 42000],
-            borderColor: '#22C55E',
-            backgroundColor: 'rgba(34, 197, 94, 0.1)',
-            tension: 0.4,
-            fill: true
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            tooltip: {
-              mode: 'index',
-              intersect: false,
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: {
-                color: 'rgba(255, 255, 255, 0.1)'
-              },
-              ticks: {
-                color: 'rgba(255, 255, 255, 0.7)'
-              }
-            },
-            x: {
-              grid: {
-                color: 'rgba(255, 255, 255, 0.1)'
-              },
-              ticks: {
-                color: 'rgba(255, 255, 255, 0.7)'
-              }
-            }
-          }
-        }
-      });
+      // 每隔一段时间更新投票状态
+      setInterval(updateVoteStatus, 60000);
     });
   </script>
 </body>
