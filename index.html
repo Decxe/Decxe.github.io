@@ -3,26 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>皇帝选举投票系统</title>
+  <title>游戏乐园 - 登录后畅玩</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            primary: '#D97706', // 主色调-金色
-            secondary: '#10B981', // 辅助色-绿色
-            accent: '#8B5CF6', // 强调色-紫色
-            neutral: '#1F2937', // 中性色-深灰
-            'base-100': '#111827', // 背景色-更深灰
-            'info': '#3ABFF8',
-            'success': '#36D399',
-            'warning': '#FBBD23',
-            'error': '#F87272',
+            primary: '#165DFF',
+            secondary: '#722ED1',
+            accent: '#FF4D4F',
+            neutral: '#1F2937',
+            'base-100': '#FFFFFF',
+            'info': '#36CFC9',
+            'success': '#52C41A',
+            'warning': '#FAAD14',
+            'error': '#F5222D',
+            'plant': '#38A169',
+            'zombie': '#B7791F',
+            'sun': '#F6AD55',
+            'tetris': '#2B6CB0',
+            'snake': '#48BB78',
+            'puzzle': '#ED8936',
+            'flappy': '#ED64A6',
+            'minesweeper': '#718096',
+            'sudoku': '#4299E1',
+            '2048': '#F6AD55',
+            'breakout': '#E53E3E',
+            'pacman': '#FAF089',
           },
           fontFamily: {
             inter: ['Inter', 'sans-serif'],
@@ -40,936 +50,1334 @@
       .text-shadow {
         text-shadow: 0 2px 4px rgba(0,0,0,0.1);
       }
-      .text-shadow-lg {
-        text-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.08);
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
       }
-      .backdrop-blur {
-        backdrop-filter: blur(8px);
+      .animate-pulse-slow {
+        animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
       }
-      .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-      }
-      .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-      .voting-card {
+      .card-hover {
         transition: all 0.3s ease;
       }
-      .voting-card:hover {
-        transform: translateY(-5px);
+      .card-hover:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
       }
-      .vote-animation {
-        animation: pulse 0.5s ease-in-out;
+      .memory-card {
+        perspective: 1000px;
+        transform-style: preserve-3d;
+        transition: transform 0.5s;
       }
-      @keyframes pulse {
+      .memory-card.flipped {
+        transform: rotateY(180deg);
+      }
+      .memory-card .front, .memory-card .back {
+        backface-visibility: hidden;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      .memory-card .back {
+        transform: rotateY(180deg);
+      }
+      .zombie-walk {
+        animation: zombieWalk 3s linear infinite;
+      }
+      @keyframes zombieWalk {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-10px); }
+      }
+      .plant-shoot {
+        animation: plantShoot 0.3s ease-in-out;
+      }
+      @keyframes plantShoot {
         0% { transform: scale(1); }
         50% { transform: scale(1.1); }
         100% { transform: scale(1); }
       }
-      .rank-up {
-        animation: rank-up 1s ease-out;
+      .bullet-move {
+        animation: bulletMove 1s linear forwards;
       }
-      @keyframes rank-up {
-        0% { color: #36D399; }
-        100% { color: inherit; }
+      @keyframes bulletMove {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(100px); }
       }
-      .rank-down {
-        animation: rank-down 1s ease-out;
+      .sun-fall {
+        animation: sunFall 2s ease-out forwards;
       }
-      @keyframes rank-down {
-        0% { color: #F87272; }
-        100% { color: inherit; }
+      @keyframes sunFall {
+        0% { transform: translateY(-20px); opacity: 0; }
+        20% { opacity: 1; }
+        100% { transform: translateY(0); opacity: 1; }
       }
-      .emperor-crown {
-        color: #D97706;
-        font-size: 1.2em;
+      .sun-collect {
+        animation: sunCollect 0.5s ease-out forwards;
       }
-      .young-prince-crown {
-        color: #8B5CF6;
-        font-size: 1em;
+      @keyframes sunCollect {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(0); opacity: 0; }
       }
-      .prince-crown {
-        color: #3ABFF8;
-        font-size: 0.9em;
+      .tetris-block {
+        transition: all 0.3s ease;
+      }
+      .snake-head {
+        border-radius: 50%;
+      }
+      .puzzle-piece {
+        transition: all 0.2s ease;
+      }
+      .flappy-bird {
+        animation: flappy 0.5s ease-in-out infinite alternate;
+      }
+      @keyframes flappy {
+        0% { transform: rotate(-5deg); }
+        100% { transform: rotate(5deg); }
+      }
+      .pacman {
+        animation: pacman 0.5s ease-in-out infinite;
+      }
+      @keyframes pacman {
+        0% { clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 0 100%); }
+        50% { clip-path: polygon(0 30%, 100% 30%, 100% 50%, 100% 70%, 0 70%); }
+        100% { clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 0 100%); }
+      }
+      .brick-break {
+        animation: brickBreak 0.3s ease-out forwards;
+      }
+      @keyframes brickBreak {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(0); opacity: 0; }
+      }
+      .tile-2048 {
+        transition: all 0.3s ease;
       }
     }
   </style>
 </head>
-<body class="font-inter bg-base-100 text-gray-100 min-h-screen flex flex-col">
-  <!-- 导航栏 -->
-  <header class="bg-neutral/80 backdrop-blur fixed w-full z-50 transition-all duration-300" id="navbar">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-2">
-        <i class="fa fa-crown text-primary text-2xl"></i>
-        <h1 class="text-xl font-bold">皇帝选举投票系统</h1>
-      </div>
+<body class="font-inter bg-gray-50 min-h-screen flex flex-col">
+  <!-- 登录页面 -->
+  <div id="login-page" class="flex items-center justify-center min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10">
+    <div class="relative w-full max-w-md p-8 bg-white rounded-2xl shadow-xl">
+      <div class="absolute -top-16 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-primary/10 rounded-full blur-2xl animate-pulse-slow"></div>
+      <div class="absolute -bottom-16 right-1/2 transform translate-x-1/2 w-32 h-32 bg-secondary/10 rounded-full blur-2xl animate-pulse-slow"></div>
       
-      <nav class="hidden md:flex items-center space-x-6">
-        <a href="#voting" class="text-gray-300 hover:text-primary transition-colors">投票</a>
-        <a href="#ranking" class="text-gray-300 hover:text-primary transition-colors">排名</a>
-        <a href="#stats" class="text-gray-300 hover:text-primary transition-colors">统计</a>
-        <a href="#about" class="text-gray-300 hover:text-primary transition-colors">关于</a>
-      </nav>
-      
-      <div class="flex items-center space-x-4">
-        <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-700 transition-colors">
-          <i class="fa fa-moon-o"></i>
-        </button>
-        <button id="login-button" class="hidden md:block bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all transform hover:scale-105 flex items-center">
-          <i class="fa fa-user mr-2"></i> 登录
-        </button>
-        <button id="mobile-menu-button" class="md:hidden p-2 rounded-full hover:bg-gray-700 transition-colors">
-          <i class="fa fa-bars"></i>
-        </button>
-      </div>
-    </div>
-    
-    <!-- 移动端菜单 -->
-    <div id="mobile-menu" class="md:hidden bg-neutral/95 backdrop-blur hidden">
-      <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
-        <a href="#voting" class="text-gray-300 hover:text-primary py-2 transition-colors">投票</a>
-        <a href="#ranking" class="text-gray-300 hover:text-primary py-2 transition-colors">排名</a>
-        <a href="#stats" class="text-gray-300 hover:text-primary py-2 transition-colors">统计</a>
-        <a href="#about" class="text-gray-300 hover:text-primary py-2 transition-colors">关于</a>
-        <button id="mobile-login-button" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
-          <i class="fa fa-user mr-2"></i> 登录
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- 主内容 -->
-  <main class="flex-grow pt-16">
-    <!-- 英雄区域 -->
-    <section class="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
-      <div class="absolute inset-0 z-0">
-        <img src="https://picsum.photos/seed/palace/1920/1080" alt="背景" class="w-full h-full object-cover opacity-20">
-        <div class="absolute inset-0 bg-gradient-to-b from-base-100/80 to-base-100"></div>
-      </div>
-      
-      <div class="container mx-auto px-4 z-10 text-center">
-        <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6 leading-tight">
-          皇帝<span class="text-primary">选举</span>投票系统
-        </h1>
-        <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-300 max-w-2xl mx-auto mb-8">
-          为您心目中的皇帝、小皇弟和皇弟投票，每天限投一票，实时查看排名变化
-        </p>
-        <div class="flex flex-col sm:flex-row justify-center gap-4">
-          <button id="hero-vote-button" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
-            <i class="fa fa-thumbs-up mr-2"></i> 立即投票
-          </button>
-          <button class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-all flex items-center justify-center">
-            <i class="fa fa-bar-chart mr-2"></i> 查看排名
-          </button>
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-primary to-secondary rounded-2xl flex items-center justify-center">
+          <i class="fa fa-gamepad text-3xl text-white"></i>
         </div>
+        <h2 class="text-2xl font-bold text-gray-800">游戏乐园</h2>
+        <p class="text-gray-500 mt-2">登录后畅玩精彩小游戏</p>
       </div>
-    </section>
-    
-    <!-- 投票区域 -->
-    <section id="voting" class="py-16 bg-base-100">
-      <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
-          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">候选人投票</h2>
-          <p class="text-gray-400 max-w-2xl mx-auto">选择您支持的候选人投票，每人每天限投一票</p>
+      
+      <form id="login-form" class="space-y-5">
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700 mb-1">用户名</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fa fa-user text-gray-400"></i>
+            </div>
+            <input type="text" id="username" name="username" class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="请输入用户名" required>
+          </div>
         </div>
         
-        <!-- 投票状态提示 -->
-        <div id="vote-status" class="mb-8 bg-neutral rounded-xl p-4 flex items-center justify-between">
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-1">密码</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fa fa-lock text-gray-400"></i>
+            </div>
+            <input type="password" id="password" name="password" class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="请输入密码" required>
+            <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+              <i class="fa fa-eye-slash"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
           <div class="flex items-center">
-            <i class="fa fa-info-circle text-primary mr-2"></i>
-            <span id="vote-status-text">您今天还没有投票</span>
+            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+            <label for="remember-me" class="ml-2 block text-sm text-gray-700">记住我</label>
           </div>
-          <div id="vote-reset-timer" class="text-sm text-gray-400">
-            投票将于 <span id="reset-time">23:59</span> 重置
-          </div>
+          <a href="#" class="text-sm font-medium text-primary hover:text-primary/80">忘记密码?</a>
         </div>
         
-        <!-- 候选人网格 -->
-        <div id="candidates-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-          <!-- 候选人卡片将通过JavaScript动态生成 -->
+        <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white py-3 px-4 rounded-lg transition-all transform hover:scale-[1.02] flex items-center justify-center">
+          <i class="fa fa-sign-in mr-2"></i> 登录
+        </button>
+      </form>
+      
+      <div class="mt-6 text-center text-gray-500 text-sm">
+        <p>还没有账号? <a href="#" class="font-medium text-primary hover:text-primary/80">立即注册</a></p>
+      </div>
+      
+      <div id="login-error" class="mt-4 hidden">
+        <div class="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative" role="alert">
+          <strong class="font-bold">登录失败!</strong>
+          <span class="block sm:inline ml-2">用户名或密码错误</span>
         </div>
       </div>
-    </section>
-    
-    <!-- 排名区域 -->
-    <section id="ranking" class="py-16 bg-neutral">
-      <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
-          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">当前排名</h2>
-          <p class="text-gray-400 max-w-2xl mx-auto">查看候选人的实时投票排名</p>
+    </div>
+  </div>
+
+  <!-- 主游戏页面 (默认隐藏) -->
+  <div id="game-page" class="hidden flex-grow">
+    <!-- 顶部导航 -->
+    <header class="bg-white shadow-md">
+      <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+            <i class="fa fa-gamepad text-white"></i>
+          </div>
+          <h1 class="text-xl font-bold">游戏乐园</h1>
         </div>
         
-        <!-- 排名列表 -->
-        <div id="ranking-list" class="bg-base-100 rounded-xl overflow-hidden shadow-xl max-w-4xl mx-auto">
-          <div class="p-4 border-b border-gray-800 flex items-center justify-between">
-            <h3 class="font-semibold flex items-center">
-              <i class="fa fa-trophy text-primary mr-2"></i> 候选人排名
-            </h3>
+        <div class="flex items-center space-x-6">
+          <nav class="hidden md:flex items-center space-x-6">
+            <a href="#home" class="text-gray-600 hover:text-primary transition-colors font-medium">首页</a>
+            <a href="#games" class="text-gray-600 hover:text-primary transition-colors font-medium">游戏</a>
+            <a href="#leaderboard" class="text-gray-600 hover:text-primary transition-colors font-medium">排行榜</a>
+            <a href="#about" class="text-gray-600 hover:text-primary transition-colors font-medium">关于</a>
+          </nav>
+          
+          <div class="flex items-center space-x-3">
+            <div class="relative">
+              <button class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-300 transition-colors">
+                <i class="fa fa-bell"></i>
+                <span class="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full flex items-center justify-center text-white text-xs">3</span>
+              </button>
+            </div>
+            
             <div class="flex items-center space-x-2">
-              <span class="text-sm text-gray-400">排序方式:</span>
-              <select id="sort-select" class="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                <option value="votes-desc">票数从高到低</option>
-                <option value="votes-asc">票数从低到高</option>
-                <option value="name-asc">姓名从A到Z</option>
-                <option value="name-desc">姓名从Z到A</option>
-              </select>
+              <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                <span class="font-medium">A</span>
+              </div>
+              <div class="hidden md:block">
+                <div class="font-medium">管理员</div>
+                <div class="text-xs text-gray-500">admin@example.com</div>
+              </div>
+            </div>
+            
+            <button id="logout-btn" class="text-gray-600 hover:text-accent transition-colors">
+              <i class="fa fa-sign-out"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+      <!-- 欢迎信息 -->
+      <section class="mb-12">
+        <div class="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8 relative overflow-hidden">
+          <div class="absolute -right-16 -top-16 w-64 h-64 bg-secondary/5 rounded-full blur-3xl"></div>
+          <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+          
+          <div class="relative">
+            <h2 class="text-3xl font-bold mb-2">欢迎回来，管理员!</h2>
+            <p class="text-gray-600 mb-6 max-w-2xl">今天想玩点什么？选择下方的游戏开始挑战吧！</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-white rounded-xl p-4 shadow-sm flex items-center">
+                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                  <i class="fa fa-trophy text-primary"></i>
+                </div>
+                <div>
+                  <div class="text-gray-500 text-sm">总积分</div>
+                  <div class="text-xl font-bold">4,850</div>
+                </div>
+              </div>
+              
+              <div class="bg-white rounded-xl p-4 shadow-sm flex items-center">
+                <div class="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center mr-4">
+                  <i class="fa fa-gamepad text-success"></i>
+                </div>
+                <div>
+                  <div class="text-gray-500 text-sm">已玩游戏</div>
+                  <div class="text-xl font-bold">32</div>
+                </div>
+              </div>
+              
+              <div class="bg-white rounded-xl p-4 shadow-sm flex items-center">
+                <div class="w-12 h-12 rounded-full bg-info/10 flex items-center justify-center mr-4">
+                  <i class="fa fa-star text-info"></i>
+                </div>
+                <div>
+                  <div class="text-gray-500 text-sm">最高记录</div>
+                  <div class="text-xl font-bold">1,850</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- 游戏选择 -->
+      <section id="games" class="mb-12">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold">选择游戏</h2>
+          <div class="flex space-x-2">
+            <button class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+              <i class="fa fa-th-large mr-1"></i> 网格
+            </button>
+            <button class="px-4 py-2 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">
+              <i class="fa fa-list mr-1"></i> 列表
+            </button>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          <!-- 游戏卡片1 - 植物大战僵尸 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="plant-vs-zombies">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/pvz/600/400" alt="植物大战僵尸" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-plant text-white px-2 py-1 rounded text-xs font-medium">
+                策略
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">植物大战僵尸</h3>
+              <p class="text-gray-600 mb-4">种植植物，抵御僵尸入侵你的花园。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-half-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.5</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
             </div>
           </div>
           
-          <div class="p-4">
+          <!-- 游戏卡片2 - 井字棋 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="tic-tac-toe">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/tic/600/400" alt="井字棋" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-info text-white px-2 py-1 rounded text-xs font-medium">
+                休闲
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">井字棋</h3>
+              <p class="text-gray-600 mb-4">经典的井字棋游戏，与AI对战。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.0</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片3 - 猜数字 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="guess-number">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/guess/600/400" alt="猜数字" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-warning text-white px-2 py-1 rounded text-xs font-medium">
+                益智
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">猜数字</h3>
+              <p class="text-gray-600 mb-4">猜出我心中的数字，挑战你的逻辑能力。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <span class="ml-2 text-gray-600 text-sm">5.0</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片4 - 记忆卡片 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="memory-card">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/memory/600/400" alt="记忆卡片" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-accent text-white px-2 py-1 rounded text-xs font-medium">
+                记忆
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">记忆卡片</h3>
+              <p class="text-gray-600 mb-4">考验你的记忆力，找出所有匹配的卡片对。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-half-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.5</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片5 - 俄罗斯方块 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="tetris">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/tetris/600/400" alt="俄罗斯方块" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-tetris text-white px-2 py-1 rounded text-xs font-medium">
+                经典
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">俄罗斯方块</h3>
+              <p class="text-gray-600 mb-4">操控各种形状的方块，填满一行消除。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.2</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片6 - 贪吃蛇 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="snake">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/snake/600/400" alt="贪吃蛇" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-snake text-white px-2 py-1 rounded text-xs font-medium">
+                休闲
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">贪吃蛇</h3>
+              <p class="text-gray-600 mb-4">控制蛇移动并吃食物，小心不要撞到墙壁或自己。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-half-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.6</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片7 - 拼图 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="puzzle">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/puzzle/600/400" alt="拼图" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-puzzle text-white px-2 py-1 rounded text-xs font-medium">
+                益智
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">拼图游戏</h3>
+              <p class="text-gray-600 mb-4">将碎片重新组合成完整的图片。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.1</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片8 - 飞扬的小鸟 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="flappy-bird">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/flappy/600/400" alt="飞扬的小鸟" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-flappy text-white px-2 py-1 rounded text-xs font-medium">
+                敏捷
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">飞扬的小鸟</h3>
+              <p class="text-gray-600 mb-4">控制小鸟飞过管道间隙，不要撞到任何障碍物。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.0</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片9 - 扫雷 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="minesweeper">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/minesweeper/600/400" alt="扫雷" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-minesweeper text-white px-2 py-1 rounded text-xs font-medium">
+                策略
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">扫雷</h3>
+              <p class="text-gray-600 mb-4">标记所有地雷位置，不要踩到任何地雷。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-half-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.5</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片10 - 数独 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="sudoku">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/sudoku/600/400" alt="数独" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-sudoku text-white px-2 py-1 rounded text-xs font-medium">
+                益智
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">数独</h3>
+              <p class="text-gray-600 mb-4">在9×9的网格中填入数字，使每行、每列和每个3×3子网格中的数字均不重复。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <span class="ml-2 text-gray-600 text-sm">5.0</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- 排行榜 -->
+      <section id="leaderboard" class="mb-12">
+        <h2 class="text-2xl font-bold mb-6">游戏排行榜</h2>
+        
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div class="border-b border-gray-200">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
+              <li class="mr-2">
+                <a href="#" class="inline-block p-4 border-b-2 border-primary text-primary rounded-t-lg">总积分</a>
+              </li>
+              <li class="mr-2">
+                <a href="#" class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg">植物大战僵尸</a>
+              </li>
+              <li class="mr-2">
+                <a href="#" class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg">井字棋</a>
+              </li>
+              <li class="mr-2">
+                <a href="#" class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg">猜数字</a>
+              </li>
+              <li class="mr-2">
+                <a href="#" class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg">记忆卡片</a>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="p-6">
             <div class="overflow-x-auto">
-              <table class="w-full">
-                <thead>
-                  <tr class="text-left text-gray-400">
-                    <th class="pb-3 font-medium">排名</th>
-                    <th class="pb-3 font-medium">候选人</th>
-                    <th class="pb-3 font-medium">票数</th>
-                    <th class="pb-3 font-medium">角色</th>
-                    <th class="pb-3 font-medium">趋势</th>
+              <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 rounded-l-lg">排名</th>
+                    <th scope="col" class="px-6 py-3">玩家</th>
+                    <th scope="col" class="px-6 py-3">游戏次数</th>
+                    <th scope="col" class="px-6 py-3">总积分</th>
+                    <th scope="col" class="px-6 py-3 rounded-r-lg">最近游戏</th>
                   </tr>
                 </thead>
-                <tbody id="ranking-body">
-                  <!-- 排名数据将通过JavaScript动态生成 -->
+                <tbody>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-primary">
+                      <div class="flex items-center">
+                        <i class="fa fa-trophy mr-2"></i> 1
+                      </div>
+                    </td>
+                    <td class="px-6 py-4">
+                      <div class="flex items-center">
+                        <img src="https://picsum.photos/seed/user1/40/40" alt="用户头像" class="w-8 h-8 rounded-full mr-3">
+                        <span class="font-medium text-gray-900">管理员</span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4">32</td>
+                    <td class="px-6 py-4 font-medium text-gray-900">4,850</td>
+                    <td class="px-6 py-4">2025-05-29</td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">2</td>
+                    <td class="px-6 py-4">
+                      <div class="flex items-center">
+                        <img src="https://picsum.photos/seed/user2/40/40" alt="用户头像" class="w-8 h-8 rounded-full mr-3">
+                        <span class="font-medium text-gray-900">小明</span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4">28</td>
+                    <td class="px-6 py-4 font-medium text-gray-900">4,120</td>
+                    <td class="px-6 py-4">2025-05-28</td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">3</td>
+                    <td class="px-6 py-4">
+                      <div class="flex items-center">
+                        <img src="https://picsum.photos/seed/user3/40/40" alt="用户头像" class="w-8 h-8 rounded-full mr-3">
+                        <span class="font-medium text-gray-900">小红</span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4">25</td>
+                    <td class="px-6 py-4 font-medium text-gray-900">3,870</td>
+                    <td class="px-6 py-4">2025-05-27</td>
+                  </tr>
+                  <tr class="bg-white border-b hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">4</td>
+                    <td class="px-6 py-4">
+                      <div class="flex items-center">
+                        <img src="https://picsum.photos/seed/user4/40/40" alt="用户头像" class="w-8 h-8 rounded-full mr-3">
+                        <span class="font-medium text-gray-900">小刚</span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4">22</td>
+                    <td class="px-6 py-4 font-medium text-gray-900">3,520</td>
+                    <td class="px-6 py-4">2025-05-26</td>
+                  </tr>
+                  <tr class="bg-white hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">5</td>
+                    <td class="px-6 py-4">
+                      <div class="flex items-center">
+                        <img src="https://picsum.photos/seed/user5/40/40" alt="用户头像" class="w-8 h-8 rounded-full mr-3">
+                        <span class="font-medium text-gray-900">小丽</span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4">19</td>
+                    <td class="px-6 py-4 font-medium text-gray-900">3,280</td>
+                    <td class="px-6 py-4">2025-05-25</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
     
-    <!-- 统计区域 -->
-    <section id="stats" class="py-16 bg-base-100">
+    <!-- 页脚 -->
+    <footer class="bg-white border-t border-gray-200 py-8">
       <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
-          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">投票统计</h2>
-          <p class="text-gray-400 max-w-2xl mx-auto">查看候选人的投票分布情况</p>
-        </div>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          <!-- 候选人投票分布 -->
-          <div class="bg-neutral rounded-xl p-6 shadow-lg">
-            <h3 class="text-lg font-semibold mb-4 flex items-center">
-              <i class="fa fa-pie-chart text-primary mr-2"></i> 候选人得票分布
-            </h3>
-            <div class="h-80">
-              <canvas id="candidates-stats-chart"></canvas>
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="mb-4 md:mb-0">
+            <div class="flex items-center space-x-2">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+                <i class="fa fa-gamepad text-white"></i>
+              </div>
+              <h2 class="text-xl font-bold">游戏乐园</h2>
             </div>
+            <p class="text-gray-500 mt-2 text-sm">© 2025 游戏乐园. 保留所有权利。</p>
           </div>
           
-          <!-- 总投票数 -->
-          <div class="bg-neutral rounded-xl p-6 shadow-lg">
-            <h3 class="text-lg font-semibold mb-4 flex items-center">
-              <i class="fa fa-bar-chart text-primary mr-2"></i> 投票数据
-            </h3>
-            <div class="grid grid-cols-2 gap-4">
-              <div class="bg-base-100 rounded-lg p-4">
-                <div class="text-sm text-gray-400 mb-1">总投票数</div>
-                <div class="text-3xl font-bold text-white" id="total-votes">0</div>
-                <div class="text-xs text-success mt-1">
-                  <i class="fa fa-arrow-up"></i> 较昨日 +12.5%
-                </div>
-              </div>
-              
-              <div class="bg-base-100 rounded-lg p-4">
-                <div class="text-sm text-gray-400 mb-1">今日投票</div>
-                <div class="text-3xl font-bold text-white" id="today-votes">0</div>
-                <div class="text-xs text-success mt-1">
-                  <i class="fa fa-arrow-up"></i> 较昨日 +8.3%
-                </div>
-              </div>
-              
-              <div class="bg-base-100 rounded-lg p-4">
-                <div class="text-sm text-gray-400 mb-1">参与用户</div>
-                <div class="text-3xl font-bold text-white" id="active-users">0</div>
-                <div class="text-xs text-success mt-1">
-                  <i class="fa fa-arrow-up"></i> 较昨日 +5.2%
-                </div>
-              </div>
-              
-              <div class="bg-base-100 rounded-lg p-4">
-                <div class="text-sm text-gray-400 mb-1">投票率</div>
-                <div class="text-3xl font-bold text-white" id="vote-rate">0%</div>
-                <div class="text-xs text-success mt-1">
-                  <i class="fa fa-arrow-up"></i> 较昨日 +2.1%
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- 关于区域 -->
-    <section id="about" class="py-16 bg-neutral">
-      <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
-          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">关于系统</h2>
-          <p class="text-gray-400 max-w-2xl mx-auto">了解更多关于皇帝选举投票排名系统的信息</p>
-        </div>
-        
-        <div class="max-w-3xl mx-auto">
-          <div class="bg-base-100 rounded-xl p-6 shadow-lg mb-8">
-            <h3 class="text-xl font-semibold mb-4">系统说明</h3>
-            <p class="text-gray-300 mb-4">
-              皇帝选举投票排名系统是一个用于选举皇帝、小皇弟和皇弟的平台。用户每天可以投一票给任意候选人，系统会实时更新排名并展示结果。
-            </p>
-            <p class="text-gray-300">
-              选举结束后，得票最多的候选人将被封为皇帝，第二名被封为小皇弟，第三名被封为皇弟。
-            </p>
-          </div>
-          
-          <div class="bg-base-100 rounded-xl p-6 shadow-lg">
-            <h3 class="text-xl font-semibold mb-4">使用规则</h3>
-            <ul class="space-y-3 text-gray-300">
-              <li class="flex items-start">
-                <i class="fa fa-check-circle text-success mt-1 mr-2"></i>
-                <span>每位用户每天只能投一票</span>
-              </li>
-              <li class="flex items-start">
-                <i class="fa fa-check-circle text-success mt-1 mr-2"></i>
-                <span>投票时间为每天00:00至23:59</span>
-              </li>
-              <li class="flex items-start">
-                <i class="fa fa-check-circle text-success mt-1 mr-2"></i>
-                <span>投票后可以在排名页面查看实时结果</span>
-              </li>
-              <li class="flex items-start">
-                <i class="fa fa-check-circle text-success mt-1 mr-2"></i>
-                <span>系统会记录投票历史和排名变化</span>
-              </li>
-              <li class="flex items-start">
-                <i class="fa fa-check-circle text-success mt-1 mr-2"></i>
-                <span>禁止使用任何自动化工具或作弊行为</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- 页脚 -->
-  <footer class="bg-neutral border-t border-gray-800">
-    <div class="container mx-auto px-4 py-12">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- 系统信息 -->
-        <div>
-          <div class="flex items-center space-x-2 mb-4">
-            <i class="fa fa-crown text-primary text-2xl"></i>
-            <h2 class="text-xl font-bold">皇帝选举投票系统</h2>
-          </div>
-          <p class="text-gray-400 mb-4">为您喜爱的候选人投票，实时查看排名变化。</p>
-          <div class="flex space-x-4">
-            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
-              <i class="fa fa-twitter"></i>
+          <div class="flex space-x-6">
+            <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+              <i class="fa fa-weibo"></i>
             </a>
-            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
-              <i class="fa fa-facebook"></i>
+            <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+              <i class="fa fa-wechat"></i>
             </a>
-            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
-              <i class="fa fa-instagram"></i>
-            </a>
-            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+            <a href="#" class="text-gray-500 hover:text-primary transition-colors">
               <i class="fa fa-github"></i>
             </a>
+            <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+              <i class="fa fa-twitter"></i>
+            </a>
           </div>
         </div>
-        
-        <!-- 快速链接 -->
-        <div>
-          <h3 class="text-lg font-semibold mb-4">快速链接</h3>
-          <ul class="space-y-2">
-            <li><a href="#voting" class="text-gray-400 hover:text-primary transition-colors">投票</a></li>
-            <li><a href="#ranking" class="text-gray-400 hover:text-primary transition-colors">排名</a></li>
-            <li><a href="#stats" class="text-gray-400 hover:text-primary transition-colors">统计</a></li>
-            <li><a href="#about" class="text-gray-400 hover:text-primary transition-colors">关于</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">帮助中心</a></li>
-          </ul>
-        </div>
-        
-        <!-- 支持 -->
-        <div>
-          <h3 class="text-lg font-semibold mb-4">支持</h3>
-          <ul class="space-y-2">
-            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">常见问题</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">使用教程</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">联系我们</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">隐私政策</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">服务条款</a></li>
-          </ul>
-        </div>
-        
-        <!-- 订阅 -->
-        <div>
-          <h3 class="text-lg font-semibold mb-4">订阅更新</h3>
-          <p class="text-gray-400 mb-4">获取系统更新和活动通知</p>
-          <form class="flex">
-            <input type="email" placeholder="您的邮箱地址" class="flex-1 bg-base-100 border border-gray-700 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-            <button type="submit" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-r-lg transition-colors">
-              <i class="fa fa-paper-plane"></i>
-            </button>
-          </form>
-        </div>
       </div>
-      
-      <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-        <p class="text-gray-500 text-sm">© 2025 皇帝选举投票系统. 保留所有权利。</p>
-        <div class="flex space-x-6 mt-4 md:mt-0">
-          <a href="#" class="text-gray-500 hover:text-primary text-sm transition-colors">隐私政策</a>
-          <a href="#" class="text-gray-500 hover:text-primary text-sm transition-colors">服务条款</a>
-          <a href="#" class="text-gray-500 hover:text-primary text-sm transition-colors">Cookie 政策</a>
-        </div>
+    </footer>
+  </div>
+
+  <!-- 游戏模态框 (默认隐藏) -->
+  <div id="game-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+        <h3 class="text-xl font-bold" id="game-modal-title">游戏名称</h3>
+        <button id="close-game-modal" class="text-gray-500 hover:text-gray-700">
+          <i class="fa fa-times text-xl"></i>
+        </button>
+      </div>
+      <div class="flex-grow overflow-auto p-4" id="game-modal-content">
+        <!-- 游戏内容将在这里动态加载 -->
+      </div>
+      <div class="p-4 border-t border-gray-200 flex justify-between items-center">
+        <button id="game-home-btn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+          <i class="fa fa-home mr-2"></i> 返回首页
+        </button>
+        <button id="restart-game-btn" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+          <i class="fa fa-refresh mr-2"></i> 重新开始
+        </button>
       </div>
     </div>
-  </footer>
+  </div>
 
-  <!-- JavaScript -->
   <script>
-    // 页面加载完成后执行
+    // 登录验证
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      
+      if (username === 'admin' && password === '12345678') {
+        document.getElementById('login-page').classList.add('hidden');
+        document.getElementById('game-page').classList.remove('hidden');
+        
+        // 保存登录状态
+        localStorage.setItem('isLoggedIn', 'true');
+      } else {
+        document.getElementById('login-error').classList.remove('hidden');
+      }
+    });
+    
+    // 切换密码可见性
+    document.getElementById('toggle-password').addEventListener('click', function() {
+      const passwordInput = document.getElementById('password');
+      const icon = this.querySelector('i');
+      
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      }
+    });
+    
+    // 检查登录状态
     document.addEventListener('DOMContentLoaded', function() {
-      // 初始化数据
-      let candidatesData = [];
-      let userVote = null;
-      let userVoteTime = null;
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
       
-      // 初始化候选人数据
-      function initCandidatesData() {
-        candidatesData = [
-          {
-            id: 1,
-            name: "许宇飞",
-            votes: 150, // 预设皇帝
-            role: "皇帝",
-            prevRank: null,
-            currentRank: null,
-            avatar: "https://picsum.photos/seed/xuyufei/200/200",
-            crown: "👑"
-          },
-          {
-            id: 2,
-            name: "赵博洋",
-            votes: 120, // 预设小皇弟
-            role: "小皇弟",
-            prevRank: null,
-            currentRank: null,
-            avatar: "https://picsum.photos/seed/zhaoboyang/200/200",
-            crown: "👑"
-          },
-          {
-            id: 3,
-            name: "金胜利",
-            votes: 90, // 预设皇弟
-            role: "皇弟",
-            prevRank: null,
-            currentRank: null,
-            avatar: "https://picsum.photos/seed/jinshengli/200/200",
-            crown: "👑"
-          }
-        ];
-        
-        // 计算初始排名
-        updateRanking();
+      if (isLoggedIn === 'true') {
+        document.getElementById('login-page').classList.add('hidden');
+        document.getElementById('game-page').classList.remove('hidden');
       }
-      
-      // 更新排名
-      function updateRanking() {
-        // 按票数降序排序
-        candidatesData.sort((a, b) => b.votes - a.votes);
-        
-        // 分配排名
-        candidatesData.forEach((candidate, index) => {
-          candidate.prevRank = candidate.currentRank;
-          candidate.currentRank = index + 1;
-          
-          // 根据排名更新角色
-          if (index === 0) {
-            candidate.role = "皇帝";
-            candidate.crown = "👑";
-          } else if (index === 1) {
-            candidate.role = "小皇弟";
-            candidate.crown = "👑";
-          } else if (index === 2) {
-            candidate.role = "皇弟";
-            candidate.crown = "👑";
-          }
-        });
+    });
+    
+    // 登出功能
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      localStorage.removeItem('isLoggedIn');
+      document.getElementById('game-page').classList.add('hidden');
+      document.getElementById('login-page').classList.remove('hidden');
+    });
+    
+    // 游戏模态框
+    const gameCards = document.querySelectorAll('[data-game]');
+    const gameModal = document.getElementById('game-modal');
+    const gameModalTitle = document.getElementById('game-modal-title');
+    const gameModalContent = document.getElementById('game-modal-content');
+    const closeGameModal = document.getElementById('close-game-modal');
+    const gameHomeBtn = document.getElementById('game-home-btn');
+    const restartGameBtn = document.getElementById('restart-game-btn');
+    
+    // 游戏映射
+    const games = {
+      'plant-vs-zombies': {
+        title: '植物大战僵尸',
+        content: `
+          <div class="p-4">
+            <div class="flex justify-between items-center mb-4">
+              <div class="bg-gray-100 px-4 py-2 rounded-lg">
+                <span class="font-medium">阳光:</span> <span id="sunlight" class="font-bold">50</span>
+              </div>
+              <div class="bg-gray-100 px-4 py-2 rounded-lg">
+                <span class="font-medium">波次:</span> <span id="wave" class="font-bold">1/10</span>
+              </div>
+              <div class="bg-gray-100 px-4 py-2 rounded-lg">
+                <span class="font-medium">僵尸剩余:</span> <span id="zombies-left" class="font-bold">5</span>
+              </div>
+            </div>
+            
+            <div class="flex space-x-4 mb-4">
+              <div class="w-16 h-16 bg-plant/20 rounded-lg flex flex-col items-center justify-center cursor-pointer" data-plant="sunflower">
+                <div class="w-10 h-10 bg-sun rounded-full flex items-center justify-center">
+                  <i class="fa fa-sun-o text-white"></i>
+                </div>
+                <span class="text-xs mt-1">向日葵</span>
+                <span class="text-xs text-sun">50</span>
+              </div>
+              <div class="w-16 h-16 bg-plant/20 rounded-lg flex flex-col items-center justify-center cursor-pointer" data-plant="peashooter">
+                <div class="w-10 h-10 bg-plant rounded-full flex items-center justify-center">
+                  <i class="fa fa-leaf text-white"></i>
+                </div>
+                <span class="text-xs mt-1">豌豆射手</span>
+                <span class="text-xs text-sun">100</span>
+              </div>
+            </div>
+            
+            <div id="game-board" class="grid grid-cols-5 gap-2">
+              <!-- 游戏网格将通过JavaScript动态生成 -->
+            </div>
+            
+            <div class="mt-4 text-center">
+              <button id="start-wave-btn" class="px-6 py-3 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors">
+                开始波次
+              </button>
+            </div>
+          </div>
+        `
+      },
+      'tic-tac-toe': {
+        title: '井字棋',
+        content: `
+          <div class="p-4 flex flex-col items-center">
+            <div class="mb-4 text-center">
+              <p id="tic-tac-toe-message" class="text-lg font-medium">轮到 X 玩家</p>
+            </div>
+            <div id="tic-tac-toe-board" class="grid grid-cols-3 gap-2">
+              <!-- 井字棋棋盘将通过JavaScript动态生成 -->
+            </div>
+            <div class="mt-6">
+              <button id="tic-tac-toe-restart" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                重新开始
+              </button>
+            </div>
+          </div>
+        `
+      },
+      'guess-number': {
+        title: '猜数字',
+        content: `
+          <div class="p-4 flex flex-col items-center">
+            <div class="mb-4 text-center">
+              <p class="text-lg font-medium">我想了一个 1 到 100 之间的数字，你能猜中吗？</p>
+            </div>
+            <div class="mb-4">
+              <input type="number" id="guess-input" min="1" max="100" placeholder="输入你的猜测" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none">
+              <button id="guess-submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                猜测
+              </button>
+            </div>
+            <div class="mb-4">
+              <p id="guess-message" class="text-lg font-medium">请输入一个数字</p>
+            </div>
+            <div class="mb-4">
+              <p id="guess-history" class="text-gray-600">历史记录: </p>
+            </div>
+            <div>
+              <button id="guess-restart" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                重新开始
+              </button>
+            </div>
+          </div>
+        `
+      },
+      'memory-card': {
+        title: '记忆卡片',
+        content: `
+          <div class="p-4 flex flex-col items-center">
+            <div class="flex justify-between w-full mb-4">
+              <div>
+                <p class="text-sm">尝试次数: <span id="memory-attempts" class="font-bold">0</span></p>
+              </div>
+              <div>
+                <p class="text-sm">已匹配: <span id="memory-matched" class="font-bold">0/8</span></p>
+              </div>
+            </div>
+            <div id="memory-game" class="grid grid-cols-4 gap-2 w-full max-w-md">
+              <!-- 记忆卡片将通过JavaScript动态生成 -->
+            </div>
+            <div class="mt-6">
+              <button id="memory-restart" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                重新开始
+              </button>
+            </div>
+          </div>
+        `
+      },
+      'tetris': {
+        title: '俄罗斯方块',
+        content: `
+          <div class="p-4 flex flex-col items-center">
+            <div class="flex justify-between w-full mb-4">
+              <div>
+                <p class="text-sm">分数: <span id="tetris-score" class="font-bold">0</span></p>
+              </div>
+              <div>
+                <p class="text-sm">等级: <span id="tetris-level" class="font-bold">1</span></p>
+              </div>
+            </div>
+            <div class="bg-gray-100 rounded-lg p-2">
+              <canvas id="tetris-canvas" width="200" height="400" class="border border-gray-300"></canvas>
+            </div>
+            <div class="mt-4 flex space-x-2">
+              <button id="tetris-left" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                <i class="fa fa-arrow-left"></i>
+              </button>
+              <button id="tetris-down" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                <i class="fa fa-arrow-down"></i>
+              </button>
+              <button id="tetris-right" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                <i class="fa fa-arrow-right"></i>
+              </button>
+              <button id="tetris-rotate" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                <i class="fa fa-refresh"></i>
+              </button>
+            </div>
+            <div class="mt-4">
+              <button id="tetris-start" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                开始游戏
+              </button>
+            </div>
+          </div>
+        `
+      },
+      'snake': {
+        title: '贪吃蛇',
+        content: `
+          <div class="p-4 flex flex-col items-center">
+            <div class="flex justify-between w-full mb-4">
+              <div>
+                <p class="text-sm">分数: <span id="snake-score" class="font-bold">0</span></p>
+              </div>
+              <div>
+                <p class="text-sm">长度: <span id="snake-length" class="font-bold">3</span></p>
+              </div>
+            </div>
+            <div class="bg-gray-100 rounded-lg p-2">
+              <canvas id="snake-canvas" width="400" height="400" class="border border-gray-300"></canvas>
+            </div>
+            <div class="mt-4 flex flex-wrap justify-center gap-2">
+              <div class="w-full text-center">
+                <button id="snake-up" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                  <i class="fa fa-arrow-up"></i>
+                </button>
+              </div>
+              <div>
+                <button id="snake-left" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                  <i class="fa fa-arrow-left"></i>
+                </button>
+              </div>
+              <div>
+                <button id="snake-down" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                  <i class="fa fa-arrow-down"></i>
+                </button>
+              </div>
+              <div>
+                <button id="snake-right" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                  <i class="fa fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+            <div class="mt-4">
+              <button id="snake-start" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                开始游戏
+              </button>
+            </div>
+          </div>
+        `
+      },
+      'puzzle': {
+        title: '拼图游戏',
+        content: `
+          <div class="p-4 flex flex-col items-center">
+            <div class="mb-4">
+              <p class="text-sm">移动次数: <span id="puzzle-moves" class="font-bold">0</span></p>
+            </div>
+            <div class="bg-gray-100 rounded-lg p-2">
+              <div id="puzzle-board" class="grid grid-cols-3 gap-1 w-64 h-64">
+                <!-- 拼图将通过JavaScript动态生成 -->
+              </div>
+            </div>
+            <div class="mt-6">
+              <button id="puzzle-shuffle" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                重新开始
+              </button>
+            </div>
+          </div>
+        `
+      },
+      'flappy-bird': {
+        title: '飞扬的小鸟',
+        content: `
+          <div class="p-4 flex flex-col items-center">
+            <div class="mb-4">
+              <p class="text-sm">分数: <span id="flappy-score" class="font-bold">0</span></p>
+            </div>
+            <div class="bg-gray-100 rounded-lg p-2">
+              <canvas id="flappy-canvas" width="300" height="400" class="border border-gray-300"></canvas>
+            </div>
+            <div class="mt-4">
+              <button id="flappy-start" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                开始游戏
+              </button>
+            </div>
+          </div>
+        `
+      },
+      'minesweeper': {
+        title: '扫雷',
+        content: `
+          <div class="p-4 flex flex-col items-center">
+            <div class="flex justify-between w-full mb-4">
+              <div>
+                <p class="text-sm">地雷: <span id="mines-count" class="font-bold">10</span></p>
+              </div>
+              <div>
+                <p class="text-sm">剩余: <span id="mines-remaining" class="font-bold">10</span></p>
+              </div>
+              <div>
+                <p class="text-sm">时间: <span id="mines-time" class="font-bold">0</span>s</p>
+              </div>
+            </div>
+            <div class="bg-gray-100 rounded-lg p-2">
+              <div id="minesweeper-board" class="grid grid-cols-9 gap-1">
+                <!-- 扫雷棋盘将通过JavaScript动态生成 -->
+              </div>
+            </div>
+            <div class="mt-6">
+              <button id="minesweeper-restart" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                重新开始
+              </button>
+            </div>
+          </div>
+        `
+      },
+      'sudoku': {
+        title: '数独',
+        content: `
+          <div class="p-4 flex flex-col items-center">
+            <div class="mb-4">
+              <p class="text-sm">难度: <span id="sudoku-difficulty" class="font-bold">简单</span></p>
+            </div>
+            <div class="bg-gray-100 rounded-lg p-2">
+              <div id="sudoku-board" class="grid grid-cols-9 gap-1 w-64">
+                <!-- 数独棋盘将通过JavaScript动态生成 -->
+              </div>
+            </div>
+            <div class="mt-4 grid grid-cols-5 gap-2 w-64">
+              <button class="sudoku-number px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" data-number="1">1</button>
+              <button class="sudoku-number px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" data-number="2">2</button>
+              <button class="sudoku-number px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" data-number="3">3</button>
+              <button class="sudoku-number px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" data-number="4">4</button>
+              <button class="sudoku-number px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" data-number="5">5</button>
+              <button class="sudoku-number px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" data-number="6">6</button>
+              <button class="sudoku-number px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" data-number="7">7</button>
+              <button class="sudoku-number px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" data-number="8">8</button>
+              <button class="sudoku-number px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" data-number="9">9</button>
+              <button id="sudoku-clear" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">清除</button>
+            </div>
+            <div class="mt-6">
+              <button id="sudoku-restart" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                重新开始
+              </button>
+            </div>
+          </div>
+        `
       }
-      
-      // 渲染候选人卡片
-      function renderCandidatesGrid() {
-        const candidatesGrid = document.getElementById('candidates-grid');
-        candidatesGrid.innerHTML = '';
+    };
+    
+    // 打开游戏模态框
+    gameCards.forEach(card => {
+      card.addEventListener('click', function() {
+        const gameId = this.getAttribute('data-game');
+        const game = games[gameId];
         
-        candidatesData.forEach(candidate => {
-          const candidateCard = document.createElement('div');
-          candidateCard.className = 'voting-card bg-neutral rounded-xl overflow-hidden hover:shadow-lg cursor-pointer';
+        if (game) {
+          gameModalTitle.textContent = game.title;
+          gameModalContent.innerHTML = game.content;
+          gameModal.classList.remove('hidden');
           
-          // 检查用户是否已经投过票
-          const hasVoted = userVote === candidate.id;
+          // 初始化游戏
+          initGame(gameId);
+        }
+      });
+    });
+    
+    // 关闭游戏模态框
+    closeGameModal.addEventListener('click', function() {
+      gameModal.classList.add('hidden');
+    });
+    
+    // 返回首页按钮
+    gameHomeBtn.addEventListener('click', function() {
+      gameModal.classList.add('hidden');
+    });
+    
+    // 重新开始游戏按钮
+    restartGameBtn.addEventListener('click', function() {
+      const gameId = document.querySelector('[data-game].active')?.getAttribute('data-game');
+      if (gameId && games[gameId]) {
+        gameModalContent.innerHTML = games[gameId].content;
+        initGame(gameId);
+      }
+    });
+    
+    // 游戏初始化函数
+    function initGame(gameId) {
+      switch(gameId) {
+        case 'plant-vs-zombies':
+          initPlantVsZombies();
+          break;
+        case 'tic-tac-toe':
+          initTicTacToe();
+          break;
+        case 'guess-number':
+          initGuessNumber();
+          break;
+        case 'memory-card':
+          initMemoryCard();
+          break;
+        case 'tetris':
+          initTetris();
+          break;
+        case 'snake':
+          initSnake();
+          break;
+        case 'puzzle':
+          initPuzzle();
+          break;
+        case 'flappy-bird':
+          initFlappyBird();
+          break;
+        case 'minesweeper':
+          initMinesweeper();
+          break;
+        case 'sudoku':
+          initSudoku();
+          break;
+      }
+    }
+    
+    // 初始化植物大战僵尸游戏
+    function initPlantVsZombies() {
+      const gameBoard = document.getElementById('game-board');
+      const sunlightEl = document.getElementById('sunlight');
+      const waveEl = document.getElementById('wave');
+      const zombiesLeftEl = document.getElementById('zombies-left');
+      const startWaveBtn = document.getElementById('start-wave-btn');
+      
+      let sunlight = 50;
+      let currentWave = 1;
+      let zombiesLeft = 5;
+      let selectedPlant = null;
+      let gameActive = false;
+      let zombies = [];
+      let plants = [];
+      let bullets = [];
+      
+      // 创建游戏网格
+      for (let row = 0; row < 5; row++) {
+        for (let col = 0; col < 5; col++) {
+          const cell = document.createElement('div');
+          cell.className = 'w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors';
+          cell.dataset.row = row;
+          cell.dataset.col = col;
           
-          // 确定卡片样式
-          if (hasVoted) {
-            candidateCard.classList.add('border-2', 'border-primary', 'bg-primary/10');
-          }
-          
-          // 添加头像区域
-          const avatarContainer = document.createElement('div');
-          avatarContainer.className = 'relative h-48';
-          
-          const avatarImg = document.createElement('img');
-          avatarImg.src = candidate.avatar;
-          avatarImg.alt = candidate.name;
-          avatarImg.className = 'w-full h-full object-cover';
-          
-          const roleBadge = document.createElement('div');
-          roleBadge.className = `absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium ${
-            candidate.role === "皇帝" ? "bg-yellow-500 text-white" : 
-            candidate.role === "小皇弟" ? "bg-purple-500 text-white" : "bg-blue-500 text-white"
-          }`;
-          roleBadge.textContent = candidate.role;
-          
-          avatarContainer.appendChild(avatarImg);
-          avatarContainer.appendChild(roleBadge);
-          
-          // 添加候选人信息
-          const infoContainer = document.createElement('div');
-          infoContainer.className = 'p-5';
-          
-          const nameRow = document.createElement('div');
-          nameRow.className = 'flex items-center justify-between mb-2';
-          
-          const name = document.createElement('h3');
-          name.className = 'text-xl font-bold';
-          name.innerHTML = `${candidate.name} ${candidate.crown}`;
-          
-          const rankBadge = document.createElement('div');
-          rankBadge.className = `px-2 py-1 rounded-full text-xs font-medium ${
-            candidate.currentRank === 1 ? "bg-yellow-500 text-white" : 
-            candidate.currentRank === 2 ? "bg-gray-500 text-white" : "bg-gray-700 text-gray-300"
-          }`;
-          rankBadge.textContent = `第 ${candidate.currentRank} 名`;
-          
-          nameRow.appendChild(name);
-          nameRow.appendChild(rankBadge);
-          
-          const votesCount = document.createElement('div');
-          votesCount.className = 'text-sm text-gray-400 mb-4';
-          votesCount.textContent = `${candidate.votes} 票`;
-          
-          // 添加投票按钮
-          const voteButton = document.createElement('button');
-          voteButton.className = `vote-button w-full py-2 rounded-lg transition-all ${hasVoted ? 'bg-primary text-white' : 'bg-gray-800 hover:bg-gray-700 text-gray-300'}`;
-          voteButton.textContent = hasVoted ? '已投票' : '投票';
-          voteButton.disabled = userVote !== null && userVote !== candidate.id;
-          
-          // 添加投票事件
-          voteButton.addEventListener('click', () => {
-            if (!voteButton.disabled) {
-              handleVote(candidate.id);
+          cell.addEventListener('click', function() {
+            if (selectedPlant && !hasPlant(row, col) && sunlight >= getPlantCost(selectedPlant)) {
+              // 种植植物
+              plantPlant(row, col, selectedPlant);
+              sunlight -= getPlantCost(selectedPlant);
+              updateUI();
             }
           });
           
-          // 组装卡片
-          infoContainer.appendChild(nameRow);
-          infoContainer.appendChild(votesCount);
-          infoContainer.appendChild(voteButton);
+          gameBoard.appendChild(cell);
+        }
+      }
+      
+      // 选择植物
+      document.querySelectorAll('[data-plant]').forEach(plant => {
+        plant.addEventListener('click', function() {
+          selectedPlant = this.dataset.plant;
           
-          candidateCard.appendChild(avatarContainer);
-          candidateCard.appendChild(infoContainer);
-          
-          // 添加到网格
-          candidatesGrid.appendChild(candidateCard);
+          // 高亮选中的植物
+          document.querySelectorAll('[data-plant]').forEach(p => {
+            p.classList.remove('ring-2', 'ring-primary');
+          });
+          this.classList.add('ring-2', 'ring-primary');
         });
-      }
+      });
       
-      // 处理投票
-      function handleVote(candidateId) {
-        // 如果用户今天已经投票，并且尝试投给不同的候选人
-        if (userVote !== null && userVote !== candidateId && !isVoteExpired()) {
-          alert('您今天已经投过票了，每天只能投一票');
-          return;
+      // 开始波次
+      startWaveBtn.addEventListener('click', function() {
+        if (!gameActive) {
+          gameActive = true;
+          startWave();
+          this.textContent = '进行中...';
+          this.disabled = true;
         }
-        
-        // 更新投票状态
-        userVote = candidateId;
-        userVoteTime = new Date().toISOString();
-        
-        // 更新候选人票数
-        const candidate = candidatesData.find(c => c.id === candidateId);
-        if (candidate) {
-          candidate.votes += 1;
-        }
-        
-        // 更新排名
-        updateRanking();
-        
-        // 更新UI
-        updateVoteStatus();
-        renderCandidatesGrid();
-        renderRankingList();
-        updateStats();
-        
-        // 添加投票动画效果
-        const votedCard = document.querySelector(`.voting-card:has(.vote-button:contains('已投票'))`);
-        if (votedCard) {
-          votedCard.classList.add('vote-animation');
-          setTimeout(() => {
-            votedCard.classList.remove('vote-animation');
-          }, 500);
-        }
-        
-        // 保存到本地存储
-        saveVoteData();
-      }
+      });
       
-      // 检查投票是否过期
-      function isVoteExpired() {
-        if (!userVoteTime) return true;
+      // 波次管理
+      function startWave() {
+        // 生成僵尸
+        zombiesLeft = 5 + currentWave * 2;
+        zombiesLeftEl.textContent = zombiesLeft;
         
-        const voteDate = new Date(userVoteTime);
-        const today = new Date();
-        
-        // 检查是否是同一天
-        return voteDate.getDate() !== today.getDate() ||
-               voteDate.getMonth() !== today.getMonth() ||
-               voteDate.getFullYear() !== today.getFullYear();
-      }
-      
-      // 更新投票状态
-      function updateVoteStatus() {
-        const voteStatusText = document.getElementById('vote-status-text');
-        const voteResetTime = document.getElementById('reset-time');
-        
-        // 计算重置时间
-        const now = new Date();
-        const resetTime = new Date(now);
-        resetTime.setHours(23, 59, 59, 0);
-        
-        const hours = resetTime.getHours().toString().padStart(2, '0');
-        const minutes = resetTime.getMinutes().toString().padStart(2, '0');
-        
-        voteResetTime.textContent = `${hours}:${minutes}`;
-        
-        // 更新投票状态
-        if (userVote && !isVoteExpired()) {
-          const candidate = candidatesData.find(c => c.id === userVote);
-          voteStatusText.innerHTML = `您今天已投票给 <span class="text-primary font-medium">${candidate ? candidate.name : userVote}</span> (${candidate ? candidate.role : '未知角色'})`;
-        } else {
-          voteStatusText.textContent = '您今天还没有投票';
-        }
-      }
-      
-      // 渲染排名列表
-      function renderRankingList() {
-        const rankingBody = document.getElementById('ranking-body');
-        rankingBody.innerHTML = '';
-        
-        // 根据排序选项排序
-        const sortSelect = document.getElementById('sort-select');
-        const sortValue = sortSelect.value;
-        
-        let sortedCandidates = [...candidatesData];
-        
-        switch (sortValue) {
-          case 'votes-desc':
-            sortedCandidates.sort((a, b) => b.votes - a.votes);
-            break;
-          case 'votes-asc':
-            sortedCandidates.sort((a, b) => a.votes - b.votes);
-            break;
-          case 'name-asc':
-            sortedCandidates.sort((a, b) => a.name.localeCompare(b.name));
-            break;
-          case 'name-desc':
-            sortedCandidates.sort((a, b) => b.name.localeCompare(a.name));
-            break;
-        }
-        
-        // 更新显示排名
-        sortedCandidates.forEach((candidate, index) => {
-          candidate.displayRank = index + 1;
-        });
-        
-        // 渲染列表
-        sortedCandidates.forEach(candidate => {
-          const row = document.createElement('tr');
-          row.className = 'border-b border-gray-800 hover:bg-gray-800/50 transition-colors';
-          
-          // 排名单元格
-          const rankCell = document.createElement('td');
-          rankCell.className = 'py-3 font-medium';
-          
-          // 添加排名变化指示
-          let rankChange = '';
-          let rankClass = '';
-          
-          if (candidate.prevRank !== null && candidate.prevRank !== candidate.currentRank) {
-            const change = candidate.prevRank - candidate.currentRank;
-            
-            if (change > 0) {
-              rankChange = `<i class="fa fa-arrow-up text-success ml-1"></i>`;
-              rankClass = 'rank-up';
-            } else if (change < 0) {
-              rankChange = `<i class="fa fa-arrow-down text-error ml-1"></i>`;
-              rankClass = 'rank-down';
-            }
+        // 每隔一段时间生成一个僵尸
+        let zombieCount = 0;
+        const zombieInterval = setInterval(() => {
+          if (zombieCount >= zombiesLeft || !gameActive) {
+            clearInterval(zombieInterval);
+            return;
           }
           
-          rankCell.innerHTML = `<span class="${rankClass}">${candidate.displayRank}</span>${rankChange}`;
+          const row = Math.floor(Math.random() * 5);
+          spawnZombie(row);
+          zombieCount++;
+        }, 2000);
+      }
+      
+      // 生成僵尸
+      function spawnZombie(row) {
+        const zombie = {
+          id: Date.now(),
+          row: row,
+          col: 4,
+          health: 100,
+          damage: 10,
+          speed: 0.01 + currentWave * 0.002
+        };
+        
+        zombies.push(zombie);
+        renderZombies();
+        
+        // 僵尸移动
+        moveZombie(zombie);
+      }
+      
+      // 僵尸移动
+      function moveZombie(zombie) {
+        const moveInterval = setInterval(() => {
+          if (!gameActive) {
+            clearInterval(moveInterval);
+            return;
+          }
           
-          // 候选人单元格
-          const candidateCell = document.createElement('td');
-          candidateCell.className = 'py-3 flex items-center';
+          // 检查前方是否有植物
+          const plantInFront = getPlantAt(zombie.row, zombie.col - 1);
           
-          const avatarImg = document.createElement('img');
-          avatarImg.src = candidate.avatar;
-          avatarImg.alt = candidate.name;
-          avatarImg.className = 'w-10 h-10 rounded-full mr-3 object-cover';
-          
-          const nameSpan = document.createElement('span');
-          
-          // 根据角色设置不同颜色
-          if (candidate.role === "皇帝") {
-            nameSpan.className = 'font-medium text-yellow-400';
-          } else if (candidate.role === "小皇弟") {
-            nameSpan.className = 'font-medium text-purple-400';
+          if (plantInFront) {
+            // 攻击植物
+            attackPlant(zombie, plantInFront);
           } else {
-            nameSpan.className = 'font-medium text-blue-400';
-          }
-          
-          nameSpan.textContent = candidate.name;
-          
-          candidateCell.appendChild(avatarImg);
-          candidateCell.appendChild(nameSpan);
-          
-          // 票数单元格
-          const votesCell = document.createElement('td');
-          votesCell.className = 'py-3';
-          votesCell.textContent = candidate.votes;
-          
-          // 角色单元格
-          const roleCell = document.createElement('td');
-          roleCell.className = 'py-3';
-          
-          const roleBadge = document.createElement('span');
-          roleBadge.className = `px-2 py-1 rounded-full text-xs font-medium ${
-            candidate.role === "皇帝" ? "bg-yellow-500 text-white" : 
-            candidate.role === "小皇弟" ? "bg-purple-500 text-white" : "bg-blue-500 text-white"
-          }`;
-          roleBadge.textContent = candidate.role;
-          
-          roleCell.appendChild(roleBadge);
-          
-          // 趋势单元格
-          const trendCell = document.createElement('td');
-          trendCell.className = 'py-3';
-          
-          // 计算趋势
-          const trend = calculateTrend(candidate.id);
-          
-          if (trend > 0) {
-            trendCell.innerHTML = `<span class="text-success"><i class="fa fa-arrow-up"></i> ${trend}%</span>`;
-          } else if (trend < 0) {
-            trendCell.innerHTML = `<span class="text-error"><i class="fa fa-arrow-down"></i> ${Math.abs(trend)}%</span>`;
-          } else {
-            trendCell.innerHTML = `<span class="text-gray-500"><i class="fa fa-minus"></i> 持平</span>`;
-          }
-          
-          // 组装行
-          row.appendChild(rankCell);
-          row.appendChild(candidateCell);
-          row.appendChild(votesCell);
-          row.appendChild(roleCell);
-          row.appendChild(trendCell);
-          
-          // 添加到表格
-          rankingBody.appendChild(row);
-        });
-      }
-      
-      // 计算趋势（模拟数据）
-      function calculateTrend(candidateId) {
-        // 随机生成-5%到5%之间的趋势值
-        return Math.floor(Math.random() * 11) - 5;
-      }
-      
-      // 更新统计数据
-      function updateStats() {
-        // 计算总投票数
-        const totalVotes = candidatesData.reduce((sum, candidate) => sum + candidate.votes, 0);
-        document.getElementById('total-votes').textContent = totalVotes;
-        
-        // 计算今日投票数（模拟）
-        const todayVotes = Math.floor(totalVotes * 0.3);
-        document.getElementById('today-votes').textContent = todayVotes;
-        
-        // 计算参与用户数（模拟）
-        const activeUsers = Math.floor(todayVotes * 0.8);
-        document.getElementById('active-users').textContent = activeUsers;
-        
-        // 计算投票率（模拟）
-        const voteRate = Math.floor((activeUsers / 1000) * 100);
-        document.getElementById('vote-rate').textContent = `${voteRate}%`;
-        
-        // 更新候选人统计图表
-        updateCandidatesStatsChart();
-      }
-      
-      // 更新候选人统计图表
-      function updateCandidatesStatsChart() {
-        const ctx = document.getElementById('candidates-stats-chart').getContext('2d');
-        
-        // 如果图表已存在，销毁它
-        if (window.candidatesChart) {
-          window.candidatesChart.destroy();
-        }
-        
-        // 创建新图表
-        window.candidatesChart = new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: candidatesData.map(candidate => candidate.name),
-            datasets: [{
-              label: '票数',
-              data: candidatesData.map(candidate => candidate.votes),
-              backgroundColor: [
-                'rgba(217, 119, 6, 0.7)', // 皇帝-金色
-                'rgba(139, 92, 246, 0.7)', // 小皇弟-紫色
-                'rgba(58, 191, 248, 0.7)'  // 皇弟-蓝色
-              ],
-              borderColor: [
-                'rgb(217, 119, 6)',
-                'rgb(139, 92, 246)',
-                'rgb(58, 191, 248)'
-              ],
-              borderWidth: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                position: 'bottom',
-                labels: {
-                  color: 'rgba(255, 255, 255, 0.7)',
-                  padding: 20,
-                  usePointStyle: true,
-                  pointStyle: 'circle'
-                }
-              },
-              tooltip: {
-                callbacks: {
-                  label: function(context) {
-                    const label = context.label || '';
-                    const value = context.raw || 0;
-                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                    const percentage = Math.round((value / total) * 100);
-                    return `${label}: ${value} 票 (${percentage}%)`;
-                  }
-                }
-              }
-            },
-            cutout: '65%'
-          }
-        });
-      }
-      
-      // 保存投票数据到本地存储
-      function saveVoteData() {
-        localStorage.setItem('voteData', JSON.stringify({
-          userVote: userVote,
-          userVoteTime: userVoteTime,
-          candidatesData: candidatesData
-        }));
-      }
-      
-      // 从本地存储加载投票数据
-      function loadVoteData() {
-        const voteData = localStorage.getItem('voteData');
-        
-        if (voteData) {
-          try {
-            const parsedData = JSON.parse(voteData);
-            userVote = parsedData.userVote;
-            userVoteTime = parsedData.userVoteTime;
-            candidatesData = parsedData.candidatesData;
+            // 移动
+            zombie.col -= zombie.speed;
             
-            // 如果投票已过期，重置用户投票
-            if (isVoteExpired()) {
-              userVote = null;
-              userVoteTime = null;
+            // 检查是否到达最左边
+            if (zombie.col <= 0) {
+              gameOver();
+              clearInterval(moveInterval);
+              return;
             }
             
-            // 更新排名
-            updateRanking();
-          } catch (e) {
-            console.error('Failed to load vote data:', e);
-            initCandidatesData();
+            renderZombies();
           }
-        } else {
-          initCandidatesData();
+          
+          // 检查僵尸是否死亡
+          if (zombie.health <= 0) {
+            zombies = zombies.filter(z => z.id !== zombie.id);
+            zombiesLeft--;
+            zombiesLeftEl.textContent = zombiesLeft;
+            renderZombies();
+            clearInterval(moveInterval);
+            
+            // 检查波次是否结束
+            if (zombies.length === 0 && zombiesLeft === 0) {
+              waveComplete();
+            }
+          }
+        }, 50);
+      }
+      
+      // 攻击植物
+      function attackPlant(zombie, plant) {
+        plant.health -= zombie.damage;
+        
+        // 检查植物是否死亡
+        if (plant.health <= 0) {
+          plants = plants.filter(p => !(p.row === plant.row && p.col === plant.col));
+          renderPlants();
         }
       }
       
-      // 初始化
-      loadVoteData();
+      // 波次完成
+      function waveComplete() {
+        gameActive = false;
+        currentWave++;
+        waveEl.textContent = `${currentWave}/10`;
+        startWaveBtn.textContent = '开始波次';
+        startWaveBtn.disabled = false;
+        
+        // 奖励阳光
+        sunlight += 100 + currentWave * 20;
+        updateUI();
+        
+        // 检查游戏是否胜利
+        if (currentWave > 10) {
+          alert('恭喜你，赢得了游戏！');
+        }
+      }
       
-      // 渲染初始UI
-      renderCandidatesGrid();
-      renderRankingList();
-      updateVoteStatus();
-      updateStats();
+      // 游戏结束
+      function gameOver() {
+        gameActive = false;
+        alert('游戏结束！僵尸入侵了你的房子。');
+        startWaveBtn.textContent = '开始波次';
+        startWaveBtn.disabled = false;
+      }
       
-      // 设置排序选择事件
-      const sortSelect = document.getElementById('sort-select');
-      sortSelect.addEventListener('change', function() {
-        renderRankingList();
-      });
-      
-      // 设置登录按钮事件
-      const loginButtons = document.querySelectorAll('#login-button, #mobile-login-button, #hero-vote-button');
-      loginButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          alert('登录功能将在实际部署时实现');
-        });
-      });
-      
-      // 设置移动端菜单切换
-      const mobileMenuButton = document.getElementById('mobile-menu-button');
-      const mobileMenu = document.getElementById('mobile-menu');
-      
-      mobileMenuButton.addEventListener('click', function() {
-        mobileMenu.classList.toggle('hidden');
-      });
-      
-      // 设置平滑滚动
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-          
-          const targetId = this.getAttribute('href');
-          const targetElement = document.querySelector(targetId);
-          
-          if (targetElement) {
-            window.scrollTo({
-              top: targetElement.offsetTop - 80, // 考虑导航栏高度
-              behavior: 'smooth'
-            });
-            
-            // 如果是移动端，点击后关闭菜单
-            if (!mobileMenu.classList.contains('hidden')) {
-              mobileMenu.classList.add('hidden');
-            }
-          }
-        });
-      });
-      
-      // 每隔一段时间更新投票状态
-      setInterval(updateVoteStatus, 60000);
-    });
-  </script>
-</body>
-</html>  
+      // 种植植物
+      function plantPlant(row, col, type) {
+        const plant = {
+          row: row,
+          col: col,
+          type: type,
