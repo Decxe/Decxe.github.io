@@ -3,184 +3,613 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>游戏乐园 - 10合1小游戏</title>
-  <script src="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/dist/tailwind.min.js"></script>
+  <title>游戏乐园 - 登录后畅玩</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  <style>
-    .hidden { display: none; }
-    .game-modal-content { min-height: 400px; }
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#722ED1',
+            accent: '#FF4D4F',
+            neutral: '#1F2937',
+            'base-100': '#FFFFFF',
+            'info': '#36CFC9',
+            'success': '#52C41A',
+            'warning': '#FAAD14',
+            'error': '#F5222D',
+            'plant': '#38A169',
+            'zombie': '#B7791F',
+            'sun': '#F6AD55',
+            'tetris': '#2B6CB0',
+            'snake': '#48BB78',
+            'puzzle': '#ED8936',
+            'flappy': '#ED64A6',
+            'minesweeper': '#718096',
+            'sudoku': '#4299E1',
+            '2048': '#F6AD55',
+            'breakout': '#E53E3E',
+            'pacman': '#FAF089',
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      .animate-pulse-slow {
+        animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      .memory-card {
+        perspective: 1000px;
+        transform-style: preserve-3d;
+        transition: transform 0.5s;
+      }
+      .memory-card.flipped {
+        transform: rotateY(180deg);
+      }
+      .memory-card .front, .memory-card .back {
+        backface-visibility: hidden;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      .memory-card .back {
+        transform: rotateY(180deg);
+      }
+      .zombie-walk {
+        animation: zombieWalk 3s linear infinite;
+      }
+      @keyframes zombieWalk {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-10px); }
+      }
+      .plant-shoot {
+        animation: plantShoot 0.3s ease-in-out;
+      }
+      @keyframes plantShoot {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+      }
+      .bullet-move {
+        animation: bulletMove 1s linear forwards;
+      }
+      @keyframes bulletMove {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(100px); }
+      }
+      .sun-fall {
+        animation: sunFall 2s ease-out forwards;
+      }
+      @keyframes sunFall {
+        0% { transform: translateY(-20px); opacity: 0; }
+        20% { opacity: 1; }
+        100% { transform: translateY(0); opacity: 1; }
+      }
+      .sun-collect {
+        animation: sunCollect 0.5s ease-out forwards;
+      }
+      @keyframes sunCollect {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(0); opacity: 0; }
+      }
+      .tetris-block {
+        transition: all 0.3s ease;
+      }
+      .snake-head {
+        border-radius: 50%;
+      }
+      .puzzle-piece {
+        transition: all 0.2s ease;
+      }
+      .flappy-bird {
+        animation: flappy 0.5s ease-in-out infinite alternate;
+      }
+      @keyframes flappy {
+        0% { transform: rotate(-5deg); }
+        100% { transform: rotate(5deg); }
+      }
+      .pacman {
+        animation: pacman 0.5s ease-in-out infinite;
+      }
+      @keyframes pacman {
+        0% { clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 0 100%); }
+        50% { clip-path: polygon(0 30%, 100% 30%, 100% 50%, 100% 70%, 0 70%); }
+        100% { clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 0 100%); }
+      }
+      .brick-break {
+        animation: brickBreak 0.3s ease-out forwards;
+      }
+      @keyframes brickBreak {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(0); opacity: 0; }
+      }
+      .tile-2048 {
+        transition: all 0.3s ease;
+      }
+    }
   </style>
 </head>
 <body class="font-inter bg-gray-50 min-h-screen flex flex-col">
   <!-- 登录页面 -->
-  <div id="login-page" class="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-purple-100">
-    <div class="w-full max-w-md p-8 bg-white rounded-2xl shadow-xl">
+  <div id="login-page" class="flex items-center justify-center min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10">
+    <div class="relative w-full max-w-md p-8 bg-white rounded-2xl shadow-xl">
+      <div class="absolute -top-16 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-primary/10 rounded-full blur-2xl animate-pulse-slow"></div>
+      <div class="absolute -bottom-16 right-1/2 transform translate-x-1/2 w-32 h-32 bg-secondary/10 rounded-full blur-2xl animate-pulse-slow"></div>
+      
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-primary to-secondary rounded-2xl flex items-center justify-center">
+          <i class="fa fa-gamepad text-3xl text-white"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-800">游戏乐园</h2>
+        <p class="text-gray-500 mt-2">登录后畅玩精彩小游戏</p>
+      </div>
+      
       <form id="login-form" class="space-y-5">
         <div>
-          <label class="block text-sm font-medium text-gray-700">用户名</label>
+          <label for="username" class="block text-sm font-medium text-gray-700 mb-1">用户名</label>
           <div class="relative">
-            <input type="text" id="username" name="username" class="w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="请输入用户名" required>
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center"><i class="fa fa-user text-gray-400"></i></div>
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fa fa-user text-gray-400"></i>
+            </div>
+            <input type="text" id="username" name="username" class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="请输入用户名" required>
           </div>
         </div>
+        
         <div>
-          <label class="block text-sm font-medium text-gray-700">密码</label>
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-1">密码</label>
           <div class="relative">
-            <input type="password" id="password" name="password" class="w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="请输入密码" required>
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center"><i class="fa fa-lock text-gray-400"></i></div>
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fa fa-lock text-gray-400"></i>
+            </div>
+            <input type="password" id="password" name="password" class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="请输入密码" required>
+            <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+              <i class="fa fa-eye-slash"></i>
+            </button>
           </div>
         </div>
-        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg flex items-center justify-center">
+        
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+            <label for="remember-me" class="ml-2 block text-sm text-gray-700">记住我</label>
+          </div>
+          <a href="#" class="text-sm font-medium text-primary hover:text-primary/80">忘记密码?</a>
+        </div>
+        
+        <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white py-3 px-4 rounded-lg transition-all transform hover:scale-[1.02] flex items-center justify-center">
           <i class="fa fa-sign-in mr-2"></i> 登录
         </button>
       </form>
+      
+      <div id="login-error" class="mt-4 hidden">
+        <div class="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative" role="alert">
+          <strong class="font-bold">登录失败!</strong>
+          <span class="block sm:inline ml-2">用户名或密码错误</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- 主游戏页面 -->
+  <!-- 主游戏页面 (默认隐藏) -->
   <div id="game-page" class="hidden flex-grow">
+    <!-- 顶部导航 -->
     <header class="bg-white shadow-md">
-      <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-        <h1 class="text-xl font-bold">游戏乐园</h1>
-        <button id="logout-btn" class="text-gray-600 hover:text-red-500"><i class="fa fa-sign-out"></i></button>
+      <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+            <i class="fa fa-gamepad text-white"></i>
+          </div>
+          <h1 class="text-xl font-bold">游戏乐园</h1>
+        </div>
+        
+        <div class="flex items-center space-x-6">
+          <nav class="hidden md:flex items-center space-x-6">
+            <a href="#home" class="text-gray-600 hover:text-primary transition-colors font-medium">首页</a>
+            <a href="#games" class="text-gray-600 hover:text-primary transition-colors font-medium">游戏</a>
+            <a href="#leaderboard" class="text-gray-600 hover:text-primary transition-colors font-medium">排行榜</a>
+            <a href="#about" class="text-gray-600 hover:text-primary transition-colors font-medium">关于</a>
+          </nav>
+          
+          <div class="flex items-center space-x-3">
+            <div class="relative">
+              <button class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-300 transition-colors">
+                <i class="fa fa-bell"></i>
+                <span class="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full flex items-center justify-center text-white text-xs">3</span>
+              </button>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+              <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                <span class="font-medium">A</span>
+              </div>
+              <div class="hidden md:block">
+                <div class="font-medium">管理员</div>
+                <div class="text-xs text-gray-500">admin@example.com</div>
+              </div>
+            </div>
+            
+            <button id="logout-btn" class="text-gray-600 hover:text-accent transition-colors">
+              <i class="fa fa-sign-out"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
-
+    
+    <!-- 主内容区 -->
     <main class="container mx-auto px-4 py-8">
-      <h2 class="text-2xl font-bold mb-8">选择游戏</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <!-- 游戏卡片 1-10 -->
-        <div class="bg-white rounded-xl shadow-md cursor-pointer" data-game="pvz">
-          <img src="https://picsum.photos/300/200?seed=pvz" alt="植物大战僵尸" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h3 class="text-lg font-bold">植物大战僵尸</h3>
-            <p class="text-gray-600">策略塔防经典</p>
+      <!-- 欢迎信息 -->
+      <section class="mb-12">
+        <div class="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8 relative overflow-hidden">
+          <div class="absolute -right-16 -top-16 w-64 h-64 bg-secondary/5 rounded-full blur-3xl"></div>
+          <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+          
+          <div class="relative">
+            <h2 class="text-3xl font-bold mb-2">欢迎回来，管理员!</h2>
+            <p class="text-gray-600 mb-6 max-w-2xl">今天想玩点什么？选择下方的游戏开始挑战吧！</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-white rounded-xl p-4 shadow-sm flex items-center">
+                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                  <i class="fa fa-trophy text-primary"></i>
+                </div>
+                <div>
+                  <div class="text-gray-500 text-sm">总积分</div>
+                  <div class="text-xl font-bold">4,850</div>
+                </div>
+              </div>
+              
+              <div class="bg-white rounded-xl p-4 shadow-sm flex items-center">
+                <div class="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center mr-4">
+                  <i class="fa fa-gamepad text-success"></i>
+                </div>
+                <div>
+                  <div class="text-gray-500 text-sm">已玩游戏</div>
+                  <div class="text-xl font-bold">32</div>
+                </div>
+              </div>
+              
+              <div class="bg-white rounded-xl p-4 shadow-sm flex items-center">
+                <div class="w-12 h-12 rounded-full bg-info/10 flex items-center justify-center mr-4">
+                  <i class="fa fa-star text-info"></i>
+                </div>
+                <div>
+                  <div class="text-gray-500 text-sm">最高记录</div>
+                  <div class="text-xl font-bold">1,850</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="bg-white rounded-xl shadow-md cursor-pointer" data-game="tic-tac-toe">
-          <img src="https://picsum.photos/300/200?seed=tic" alt="井字棋" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h3 class="text-lg font-bold">井字棋</h3>
-            <p class="text-gray-600">经典益智对战</p>
+      </section>
+      
+      <!-- 游戏选择 -->
+      <section id="games" class="mb-12">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold">选择游戏</h2>
+          <div class="flex space-x-2">
+            <button class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+              <i class="fa fa-th-large mr-1"></i> 网格
+            </button>
+            <button class="px-4 py-2 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">
+              <i class="fa fa-list mr-1"></i> 列表
+            </button>
           </div>
         </div>
-        <div class="bg-white rounded-xl shadow-md cursor-pointer" data-game="guess-number">
-          <img src="https://picsum.photos/300/200?seed=guess" alt="猜数字" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h3 class="text-lg font-bold">猜数字</h3>
-            <p class="text-gray-600">逻辑推理挑战</p>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          <!-- 游戏卡片1 - 植物大战僵尸 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="plant-vs-zombies">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/pvz/600/400" alt="植物大战僵尸" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-plant text-white px-2 py-1 rounded text-xs font-medium">
+                策略
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">植物大战僵尸</h3>
+              <p class="text-gray-600 mb-4">种植植物，抵御僵尸入侵你的花园。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-half-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.5</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片2 - 井字棋 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="tic-tac-toe">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/tic/600/400" alt="井字棋" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-info text-white px-2 py-1 rounded text-xs font-medium">
+                休闲
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">井字棋</h3>
+              <p class="text-gray-600 mb-4">经典的井字棋游戏，与AI对战。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.0</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片3 - 猜数字 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="guess-number">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/guess/600/400" alt="猜数字" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-warning text-white px-2 py-1 rounded text-xs font-medium">
+                益智
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">猜数字</h3>
+              <p class="text-gray-600 mb-4">猜出我心中的数字，挑战你的逻辑能力。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <span class="ml-2 text-gray-600 text-sm">5.0</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片4 - 记忆卡片 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="memory-card">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/memory/600/400" alt="记忆卡片" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-accent text-white px-2 py-1 rounded text-xs font-medium">
+                记忆
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">记忆卡片</h3>
+              <p class="text-gray-600 mb-4">考验你的记忆力，找出所有匹配的卡片对。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-half-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.5</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片5 - 俄罗斯方块 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="tetris">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/tetris/600/400" alt="俄罗斯方块" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-tetris text-white px-2 py-1 rounded text-xs font-medium">
+                经典
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">俄罗斯方块</h3>
+              <p class="text-gray-600 mb-4">操控各种形状的方块，填满一行消除。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.2</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片6 - 贪吃蛇 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="snake">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/snake/600/400" alt="贪吃蛇" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-snake text-white px-2 py-1 rounded text-xs font-medium">
+                休闲
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">贪吃蛇</h3>
+              <p class="text-gray-600 mb-4">控制蛇移动并吃食物，小心不要撞到墙壁或自己。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-half-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.6</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片7 - 拼图 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="puzzle">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/puzzle/600/400" alt="拼图" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-puzzle text-white px-2 py-1 rounded text-xs font-medium">
+                益智
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">拼图游戏</h3>
+              <p class="text-gray-600 mb-4">将碎片重新组合成完整的图片。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.1</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片8 - 飞扬的小鸟 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="flappy-bird">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/flappy/600/400" alt="飞扬的小鸟" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-flappy text-white px-2 py-1 rounded text-xs font-medium">
+                敏捷
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">飞扬的小鸟</h3>
+              <p class="text-gray-600 mb-4">控制小鸟飞过管道间隙，不要撞到任何障碍物。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.0</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片9 - 扫雷 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="minesweeper">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/minesweeper/600/400" alt="扫雷" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-minesweeper text-white px-2 py-1 rounded text-xs font-medium">
+                策略
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">扫雷</h3>
+              <p class="text-gray-600 mb-4">标记所有地雷位置，不要踩到任何地雷。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star-half-o"></i>
+                  <span class="ml-2 text-gray-600 text-sm">4.5</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 游戏卡片10 - 数独 -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover cursor-pointer" data-game="sudoku">
+            <div class="relative">
+              <img src="https://picsum.photos/seed/sudoku/600/400" alt="数独" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 bg-sudoku text-white px-2 py-1 rounded text-xs font-medium">
+                益智
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">数独</h3>
+              <p class="text-gray-600 mb-4">在9×9的网格中填入数字，使每行、每列和每个3×3子网格中的数字均不重复。</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center text-yellow-400">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <span class="ml-2 text-gray-600 text-sm">5.0</span>
+                </div>
+                <button class="text-primary font-medium flex items-center">
+                  开始 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="bg-white rounded-xl shadow-md cursor-pointer" data-game="memory">
-          <img src="https://picsum.photos/300/200?seed=memory" alt="记忆卡片" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h3 class="text-lg font-bold">记忆卡片</h3>
-            <p class="text-gray-600">记忆力大挑战</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-xl shadow-md cursor-pointer" data-game="tetris">
-          <img src="https://picsum.photos/300/200?seed=tetris" alt="俄罗斯方块" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h3 class="text-lg font-bold">俄罗斯方块</h3>
-            <p class="text-gray-600">经典消除游戏</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-xl shadow-md cursor-pointer" data-game="snake">
-          <img src="https://picsum.photos/300/200?seed=snake" alt="贪吃蛇" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h3 class="text-lg font-bold">贪吃蛇</h3>
-            <p class="text-gray-600">敏捷类经典</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-xl shadow-md cursor-pointer" data-game="puzzle">
-          <img src="https://picsum.photos/300/200?seed=puzzle" alt="拼图" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h3 class="text-lg font-bold">拼图游戏</h3>
-            <p class="text-gray-600">碎片重组挑战</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-xl shadow-md cursor-pointer" data-game="flappy">
-          <img src="https://picsum.photos/300/200?seed=flappy" alt="飞扬的小鸟" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h3 class="text-lg font-bold">飞扬的小鸟</h3>
-            <p class="text-gray-600">敏捷飞行挑战</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-xl shadow-md cursor-pointer" data-game="minesweeper">
-          <img src="https://picsum.photos/300/200?seed=minesweeper" alt="扫雷" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h3 class="text-lg font-bold">扫雷</h3>
-            <p class="text-gray-600">策略推理游戏</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-xl shadow-md cursor-pointer" data-game="sudoku">
-          <img src="https://picsum.photos/300/200?seed=sudoku" alt="数独" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h3 class="text-lg font-bold">数独</h3>
-            <p class="text-gray-600">数字逻辑谜题</p>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- 游戏模态框 -->
-  <div id="game-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden">
-    <div class="bg-white rounded-lg p-6 max-w-4xl w-full">
-      <h2 class="text-xl font-bold mb-4" id="modal-title"></h2>
-      <div id="modal-content" class="min-h-400"></div>
-      <button id="close-modal" class="mt-4 w-full bg-red-500 text-white py-2 rounded-lg">关闭</button>
-    </div>
-  </div>
-
-  <script>
-    // 登录逻辑
-    document.getElementById('login-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const username = 'admin', password = '12345678';
-      if (document.getElementById('username').value === username && 
-          document.getElementById('password').value === password) {
-        document.getElementById('login-page').classList.add('hidden');
-        document.getElementById('game-page').classList.remove('hidden');
-      } else {
-        alert('用户名或密码错误');
-      }
-    });
-
-    // 登出逻辑
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      document.getElementById('game-page').classList.add('hidden');
-      document.getElementById('login-page').classList.remove('hidden');
-    });
-
-    // 游戏列表
-    const games = {
-      pvz: () => `<h2>植物大战僵尸</h2><p>策略塔防游戏逻辑...</p>`,
-      'tic-tac-toe': () => `<h2>井字棋</h2><p>X vs O 对战...</p>`,
-      'guess-number': () => `<h2>猜数字</h2><p>1-100 猜谜逻辑...</p>`,
-      memory: () => `<h2>记忆卡片</h2><p>翻牌配对游戏...</p>`,
-      tetris: () => `<h2>俄罗斯方块</h2><canvas id="tetris-canvas"></canvas>`,
-      snake: () => `<h2>贪吃蛇</h2><canvas id="snake-canvas"></canvas>`,
-      puzzle: () => `<h2>拼图游戏</h2><div class="grid grid-cols-3 gap-2">...</div>`,
-      flappy: () => `<h2>飞扬的小鸟</h2><canvas id="flappy-canvas"></canvas>`,
-      minesweeper: () => `<h2>扫雷</h2><div class="grid grid-cols-9 gap-1">...</div>`,
-      sudoku: () => `<h2>数独</h2><div class="grid grid-cols-9 gap-1">...</div>`
-    };
-
-    // 打开游戏模态框
-    document.querySelectorAll('[data-game]').forEach(card => {
-      card.addEventListener('click', () => {
-        const gameId = card.dataset.game;
-        document.getElementById('modal-title').textContent = games[gameId].name || '小游戏';
-        document.getElementById('modal-content').innerHTML = games[gameId]();
-        document.getElementById('game-modal').classList.remove('hidden');
-      });
-    });
-
-    // 关闭模态框
-    document.getElementById('close-modal').addEventListener('click', () => {
-      document.getElementById('game-modal').classList.add('hidden');
-    });
-  </script>
-</body>
-</html>
+      </section>
+      
+      <!-- 排行榜 -->
+      <section id="leaderboard" class="mb-12">
+        <h2 class="text-2xl font-bold mb-6">游戏排行榜</h2>
+        
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div class="border-b border-gray-200">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
+              <li class="mr-2">
+                <a href="#" class="inline-block p-4 border-b-2 border-primary text-primary rounded-t-lg">总积分</a>
+              </li>
+              <li class="mr-2">
+                <a href="#" class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg">植物大战僵尸</a>
+              </li>
+              <li class="mr-2">
+                <a href="#" class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg">井字棋</a>
+              </li>
+              <li class="mr-2">
+                
