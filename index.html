@@ -3,18 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="石家庄铁道大学机械工程师生主页：个人介绍、导师介绍与相关文献。" />
   <title>师生主页 · 石家庄铁道大学机械工程</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <header class="top">
     <div class="wrap">
-      <p class="school">石家庄铁道大学 · 机械工程</p>
-      <h1>师生主页</h1>
+      <div class="top-row">
+        <div>
+          <p class="school">石家庄铁道大学 · 机械工程</p>
+          <h1>师生主页</h1>
+        </div>
+        <div class="live-panel">
+          <p class="greet" id="greet">你好</p>
+          <p class="clock" id="clock">正在获取北京时间…</p>
+          <p class="visits">
+            本站总访问 <span id="busuanzi_value_site_pv">-</span> 次
+            · 访客 <span id="busuanzi_value_site_uv">-</span> 人
+            · 本机打开 <span id="local-visits">-</span> 次
+          </p>
+        </div>
+      </div>
       <nav>
         <a href="#me">我的介绍</a>
         <a href="#advisor">导师介绍</a>
         <a href="#papers">导师文献</a>
+        <a href="#links">常用链接</a>
         <a href="games.html">游戏乐园</a>
       </nav>
     </div>
@@ -28,6 +43,11 @@
         <div class="bio">
           <h3>Decxe</h3>
           <p class="meta">硕士研究生 · 机械工程</p>
+          <ul class="tags">
+            <li>机械工程</li>
+            <li>科研训练</li>
+            <li>研究生在读</li>
+          </ul>
           <p>
             我是石家庄铁道大学机械工程专业硕士研究生。本页用于介绍个人与指导教师的研究方向，以及导师公开发表的相关文献。
             照片、姓名与联系方式可随时替换为正式信息。
@@ -61,7 +81,7 @@
     </section>
 
     <section id="papers" class="card">
-      <h2>导师相关文献</h2>
+      <h2>导师相关文献（共 <span id="paper-count">3</span> 篇）</h2>
       <p class="hint">点击「打开」可进入文献页面。下列为条目格式示例，请替换为导师真实论文与 DOI / 知网链接。</p>
       <div class="table-wrap">
         <table>
@@ -97,12 +117,32 @@
       </div>
       <p class="note">更换照片：把本人与导师照片放到 <code>images/me.jpg</code>、<code>images/advisor.jpg</code>，并把页面里的 <code>.svg</code> 路径改成对应 jpg 即可。</p>
     </section>
+
+    <section id="links" class="card">
+      <h2>常用链接</h2>
+      <div class="quick">
+        <a href="https://www.stdu.edu.cn/" target="_blank" rel="noopener">学校官网</a>
+        <a href="https://github.com/Decxe" target="_blank" rel="noopener">我的 GitHub</a>
+        <a href="https://scholar.google.com/" target="_blank" rel="noopener">Google Scholar</a>
+        <a href="https://kns.cnki.net/" target="_blank" rel="noopener">中国知网</a>
+        <a href="games.html">游戏乐园</a>
+      </div>
+    </section>
   </main>
 
   <footer>
     <div class="wrap">
-      <p>© 2026 石家庄铁道大学机械工程 · <a href="games.html">游戏乐园</a></p>
+      <p class="footer-meta">
+        <span>© 2026 石家庄铁道大学机械工程</span>
+        <span>页面更新：2026-09-20</span>
+        <span>时间以北京时间为准</span>
+        <a href="games.html">游戏乐园</a>
+      </p>
     </div>
   </footer>
+
+  <button type="button" id="back-top" aria-label="回到顶部">↑</button>
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="js/site.js"></script>
 </body>
 </html>
