@@ -1,0 +1,180 @@
+:root {
+  --bg: #f4f6f8;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #5b6573;
+  --line: #e5e7eb;
+  --accent: #1d4f91;
+  --accent-dark: #163a6b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.65;
+}
+
+.wrap {
+  width: min(920px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.top {
+  background: var(--accent-dark);
+  color: #fff;
+  padding: 28px 0 20px;
+}
+
+.top .school {
+  margin: 0;
+  opacity: 0.85;
+  font-size: 14px;
+}
+
+.top h1 {
+  margin: 6px 0 16px;
+  font-size: 28px;
+  font-weight: 650;
+}
+
+nav {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+nav a:hover {
+  border-bottom-color: #fff;
+}
+
+.card {
+  background: var(--card);
+  margin: 20px 0;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+}
+
+.card h2 {
+  margin: 0 0 18px;
+  font-size: 22px;
+  border-left: 4px solid var(--accent);
+  padding-left: 10px;
+}
+
+.person {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+.avatar {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #eef2f7;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+}
+
+.bio h3 {
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+
+.meta {
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+
+.facts {
+  padding-left: 18px;
+}
+
+.facts a,
+.bio a,
+td a {
+  color: var(--accent);
+}
+
+.hint {
+  color: var(--muted);
+  margin-top: 0;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  overflow-wrap: break-word;
+}
+
+th {
+  color: var(--muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+td a {
+  text-decoration: none;
+}
+
+td a:hover {
+  text-decoration: underline;
+}
+
+.note {
+  margin: 16px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+footer {
+  color: var(--muted);
+  font-size: 13px;
+  padding: 8px 0 32px;
+}
+
+footer a {
+  color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .person {
+    flex-direction: column;
+  }
+
+  .avatar {
+    width: 140px;
+    height: 140px;
+  }
+}
