@@ -39,14 +39,6 @@
     if (greet) greet.textContent = greeting(now.getHours());
   }
 
-  function localVisits() {
-    var key = "decxe-site-local-visits";
-    var n = Number(localStorage.getItem(key) || 0) + 1;
-    localStorage.setItem(key, String(n));
-    var el = document.getElementById("local-visits");
-    if (el) el.textContent = String(n);
-  }
-
   function paperCount() {
     var n = document.querySelectorAll("#papers tbody tr").length;
     var el = document.getElementById("paper-count");
@@ -65,6 +57,5 @@
 
   tick();
   setInterval(tick, 1000);
-  localVisits();
   paperCount();
 })();
