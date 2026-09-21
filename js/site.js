@@ -97,7 +97,7 @@
     var cursor = document.createElement("div");
     cursor.id = "rainbow-cursor";
     cursor.setAttribute("aria-hidden", "true");
-    cursor.innerHTML = '<span class="cursor-core"></span><span class="cursor-ring"></span>';
+    cursor.innerHTML = '<span class="cursor-core"></span>';
     document.body.appendChild(cursor);
     document.body.classList.add("rainbow-cursor-on");
 
