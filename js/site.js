@@ -45,6 +45,54 @@
     if (el) el.textContent = String(n);
   }
 
+  function setText(id, value) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = value;
+  }
+
+  function readJson(url) {
+    return fetch(url, { cache: "no-store" }).then(function (res) {
+      if (!res.ok) throw new Error("bad status");
+      return res.json();
+    });
+  }
+
+  function countFrom(data) {
+    var n = data && (data.value || data.count);
+    n = Number(n);
+    return isFinite(n) && n >= 0 ? n : null;
+  }
+
+  function loadVisits() {
+    var ns = "decxe-github-io";
+    var pvUrl = "https://abacus.jasoncameron.dev/hit/" + ns + "/homepage";
+    var uvFlag = "decxe-uv-counted";
+    var uvUrl = localStorage.getItem(uvFlag)
+      ? "https://abacus.jasoncameron.dev/get/" + ns + "/uv"
+      : "https://abacus.jasoncameron.dev/hit/" + ns + "/uv";
+
+    readJson(pvUrl)
+      .then(function (data) {
+        var n = countFrom(data);
+        if (n === null) throw new Error("no pv");
+        setText("visit-count", String(n));
+      })
+      .catch(function () {
+        setText("visit-count", "--");
+      });
+
+    readJson(uvUrl)
+      .then(function (data) {
+        var n = countFrom(data);
+        if (n === null) throw new Error("no uv");
+        localStorage.setItem(uvFlag, "1");
+        setText("visitor-count", String(n));
+      })
+      .catch(function () {
+        setText("visitor-count", "--");
+      });
+  }
+
   var topBtn = document.getElementById("back-top");
   if (topBtn) {
     window.addEventListener("scroll", function () {
@@ -58,4 +106,5 @@
   tick();
   setInterval(tick, 1000);
   paperCount();
+  loadVisits();
 })();

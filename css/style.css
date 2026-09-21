@@ -14,6 +14,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 148px;
 }
 
 body {
@@ -30,9 +31,13 @@ body {
 }
 
 .top {
+  position: sticky;
+  top: 0;
+  z-index: 200;
   background: var(--accent-dark);
   color: #fff;
-  padding: 28px 0 20px;
+  padding: 14px 0 12px;
+  box-shadow: 0 8px 18px rgba(15, 35, 64, 0.18);
 }
 
 .top-row {
@@ -49,8 +54,8 @@ body {
 }
 
 .top h1 {
-  margin: 6px 0 16px;
-  font-size: 28px;
+  margin: 4px 0 8px;
+  font-size: 24px;
   font-weight: 650;
 }
 
