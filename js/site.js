@@ -86,8 +86,73 @@
     });
   }
 
+  function canUsePointerFx() {
+    return window.matchMedia("(hover: hover) and (pointer: fine)").matches
+      && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function setupPointerFx() {
+    if (!canUsePointerFx()) return;
+
+    var cursor = document.createElement("div");
+    cursor.id = "rainbow-cursor";
+    cursor.setAttribute("aria-hidden", "true");
+    cursor.innerHTML = '<span class="cursor-core"></span><span class="cursor-ring"></span>';
+    document.body.appendChild(cursor);
+    document.body.classList.add("rainbow-cursor-on");
+
+    document.addEventListener("mousemove", function (e) {
+      cursor.style.left = e.clientX + "px";
+      cursor.style.top = e.clientY + "px";
+      cursor.classList.add("is-on");
+    });
+
+    document.addEventListener("mouseleave", function () {
+      cursor.classList.remove("is-on");
+    });
+
+    document.addEventListener("mousedown", function () {
+      cursor.classList.add("is-press");
+    });
+
+    document.addEventListener("mouseup", function () {
+      cursor.classList.remove("is-press");
+    });
+
+    document.addEventListener("click", function (e) {
+      var ripple = document.createElement("span");
+      ripple.className = "click-ripple";
+      ripple.style.left = e.clientX + "px";
+      ripple.style.top = e.clientY + "px";
+      document.body.appendChild(ripple);
+      setTimeout(function () {
+        ripple.remove();
+      }, 650);
+
+      var i;
+      for (i = 0; i < 10; i += 1) {
+        (function (index) {
+          var spark = document.createElement("span");
+          var angle = (Math.PI * 2 * index) / 10;
+          var dist = 22 + Math.random() * 26;
+          spark.className = "click-spark";
+          spark.style.left = e.clientX + "px";
+          spark.style.top = e.clientY + "px";
+          spark.style.background = "hsl(" + (index * 36) + " 92% 56%)";
+          spark.style.setProperty("--dx", Math.cos(angle) * dist + "px");
+          spark.style.setProperty("--dy", Math.sin(angle) * dist + "px");
+          document.body.appendChild(spark);
+          setTimeout(function () {
+            spark.remove();
+          }, 580);
+        })(i);
+      }
+    });
+  }
+
   tick();
   setInterval(tick, 1000);
   paperCount();
   loadVisits();
+  setupPointerFx();
 })();
