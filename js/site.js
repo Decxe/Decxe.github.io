@@ -64,14 +64,8 @@
   }
 
   function loadVisits() {
-    var ns = "decxe-github-io";
-    var pvUrl = "https://abacus.jasoncameron.dev/hit/" + ns + "/homepage";
-    var uvFlag = "decxe-uv-counted";
-    var uvUrl = localStorage.getItem(uvFlag)
-      ? "https://abacus.jasoncameron.dev/get/" + ns + "/uv"
-      : "https://abacus.jasoncameron.dev/hit/" + ns + "/uv";
-
-    readJson(pvUrl)
+    var url = "https://abacus.jasoncameron.dev/hit/decxe-github-io/homepage";
+    readJson(url)
       .then(function (data) {
         var n = countFrom(data);
         if (n === null) throw new Error("no pv");
@@ -79,17 +73,6 @@
       })
       .catch(function () {
         setText("visit-count", "--");
-      });
-
-    readJson(uvUrl)
-      .then(function (data) {
-        var n = countFrom(data);
-        if (n === null) throw new Error("no uv");
-        localStorage.setItem(uvFlag, "1");
-        setText("visitor-count", String(n));
-      })
-      .catch(function () {
-        setText("visitor-count", "--");
       });
   }
 
