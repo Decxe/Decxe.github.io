@@ -101,14 +101,85 @@
     document.body.appendChild(cursor);
     document.body.classList.add("rainbow-cursor-on");
 
+    var hue = 0;
+    var lastX = 0;
+    var lastY = 0;
+    var lastDust = 0;
+    var mouseX = 0;
+    var mouseY = 0;
+    var trail = [];
+    var i;
+    for (i = 0; i < 10; i += 1) {
+      (function () {
+        var dot = document.createElement("span");
+        dot.className = "cursor-trail";
+        document.body.appendChild(dot);
+        trail.push({ el: dot, x: 0, y: 0 });
+      })();
+    }
+
+    function spawnDust(x, y) {
+      var dust = document.createElement("span");
+      dust.className = "cursor-dust";
+      dust.style.left = x + "px";
+      dust.style.top = y + "px";
+      dust.style.background = "hsl(" + hue + " 92% 58%)";
+      dust.style.boxShadow = "0 0 8px hsl(" + hue + " 92% 58%)";
+      document.body.appendChild(dust);
+      setTimeout(function () {
+        dust.remove();
+      }, 520);
+    }
+
+    function tickTrail() {
+      var x = mouseX;
+      var y = mouseY;
+      var n;
+      for (n = 0; n < trail.length; n += 1) {
+        var ease = 0.38 - n * 0.026;
+        if (ease < 0.12) ease = 0.12;
+        trail[n].x += (x - trail[n].x) * ease;
+        trail[n].y += (y - trail[n].y) * ease;
+        trail[n].el.style.left = trail[n].x + "px";
+        trail[n].el.style.top = trail[n].y + "px";
+        trail[n].el.style.background = "hsl(" + ((hue + n * 24) % 360) + " 90% 56%)";
+        trail[n].el.style.width = 11 - n * 0.55 + "px";
+        trail[n].el.style.height = 11 - n * 0.55 + "px";
+        x = trail[n].x;
+        y = trail[n].y;
+      }
+      requestAnimationFrame(tickTrail);
+    }
+
     document.addEventListener("mousemove", function (e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
       cursor.style.left = e.clientX + "px";
       cursor.style.top = e.clientY + "px";
       cursor.classList.add("is-on");
+      hue = (hue + 8) % 360;
+
+      var dist = Math.hypot(e.clientX - lastX, e.clientY - lastY);
+      var now = Date.now();
+      var n;
+      if (dist > 12 && now - lastDust > 16) {
+        spawnDust(e.clientX, e.clientY);
+        lastX = e.clientX;
+        lastY = e.clientY;
+        lastDust = now;
+      }
+
+      for (n = 0; n < trail.length; n += 1) {
+        trail[n].el.classList.add("is-on");
+      }
     });
 
     document.addEventListener("mouseleave", function () {
+      var n;
       cursor.classList.remove("is-on");
+      for (n = 0; n < trail.length; n += 1) {
+        trail[n].el.classList.remove("is-on");
+      }
     });
 
     document.addEventListener("mousedown", function () {
@@ -148,6 +219,8 @@
         })(i);
       }
     });
+
+    requestAnimationFrame(tickTrail);
   }
 
   tick();

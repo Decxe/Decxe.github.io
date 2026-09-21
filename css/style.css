@@ -275,7 +275,9 @@ footer a {
 
 #rainbow-cursor,
 .click-ripple,
-.click-spark {
+.click-spark,
+.cursor-trail,
+.cursor-dust {
   pointer-events: none;
 }
 
@@ -334,6 +336,31 @@ footer a {
   animation: click-spark 0.55s ease-out forwards;
 }
 
+.cursor-trail {
+  position: fixed;
+  z-index: 9997;
+  width: 11px;
+  height: 11px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  opacity: 0;
+  box-shadow: 0 0 10px currentColor;
+}
+
+.cursor-trail.is-on {
+  opacity: 0.78;
+}
+
+.cursor-dust {
+  position: fixed;
+  z-index: 9996;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  animation: trail-fade 0.5s ease-out forwards;
+}
+
 @keyframes rainbow-spin {
   to {
     filter: hue-rotate(360deg) drop-shadow(0 0 5px rgba(255, 255, 255, 0.55));
@@ -354,6 +381,13 @@ footer a {
   }
 }
 
+@keyframes trail-fade {
+  to {
+    transform: scale(0.15);
+    opacity: 0;
+  }
+}
+
 @media (hover: hover) and (pointer: fine) {
   body.rainbow-cursor-on,
   body.rainbow-cursor-on * {
@@ -364,7 +398,9 @@ footer a {
 @media (prefers-reduced-motion: reduce) {
   #rainbow-cursor,
   .click-ripple,
-  .click-spark {
+  .click-spark,
+  .cursor-trail,
+  .cursor-dust {
     display: none;
   }
 
